@@ -8,8 +8,8 @@ usage here
 
 ## Contributing 
 ---
-1. dhegyguyewduedwh
-2.
+1. uifdsiufiusd
+2. 
 
 ## Credits
 ---
