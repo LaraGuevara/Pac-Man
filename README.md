@@ -14,6 +14,8 @@ usage here
 
 ## Credits
 ---
+usage here
+
 
 ## Liscense
 ---
