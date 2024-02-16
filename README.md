@@ -1,3 +1,19 @@
 # Pac-Man
-ghgfgjhgjh
+---
+description here
+
+## Usage
+---
+usage here
+
+## Contributing 
+---
+1.
+2.
+
+## Credits
+---
+
+## Liscense
+---
  
