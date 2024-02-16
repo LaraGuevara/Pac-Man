@@ -8,7 +8,7 @@ usage here
 
 ## Contributing 
 ---
-1. hellooooooooooo
+1. dhegyguyewduedwh
 2.
 
 ## Credits
