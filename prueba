@@ -1,3 +1,0 @@
-int hola=1;
-int dos=2;
-cout<<(hola+dos);
