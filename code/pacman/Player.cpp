@@ -211,31 +211,31 @@ void Player::Move()
 	int prev_y = pos.y;
 
 	//checks which way the player wants to turn next
-	if (IsKeyPressed(KEY_UP) || IsKeyDown(KEY_UP))
+	if (IsKeyPressed(KEY_UP) or IsKeyDown(KEY_UP))
 	{
 		turn = Look::UP;
 		state = State::WALKING;
 	}
-	else if (IsKeyPressed(KEY_DOWN) || IsKeyDown(KEY_DOWN)) {
+	else if (IsKeyPressed(KEY_DOWN) or IsKeyDown(KEY_DOWN)) {
 		turn = Look::DOWN;
 		state = State::WALKING;
 	}
-	else if (IsKeyPressed(KEY_RIGHT) || IsKeyDown(KEY_RIGHT)) {
+	else if (IsKeyPressed(KEY_RIGHT) or IsKeyDown(KEY_RIGHT)) {
 		turn = Look::RIGHT;
 		state = State::WALKING;
 	}
-	else if (IsKeyPressed(KEY_LEFT) || IsKeyDown(KEY_LEFT)) {
+	else if (IsKeyPressed(KEY_LEFT) or IsKeyDown(KEY_LEFT)) {
 		turn = Look::LEFT;
 		state = State::WALKING;
 	}
 
-	if (state == State::WALKING) {
-		//checks if the turn is possible
+	//checks if the turn is possible
+	if (turn != look) {
 		switch (turn) {
 		case Look::UP:
 			pos.y -= PLAYER_SPEED;
 			box = GetHitbox();
-			if (!map->TestCollisionWallUp(box)) ChangeAnimUp(); 
+			if (!map->TestCollisionWallUp(box)) ChangeAnimUp();
 			pos.y = prev_y;
 			break;
 		case Look::DOWN:
@@ -257,69 +257,67 @@ void Player::Move()
 			pos.x = prev_x;
 			break;
 		}
+	}
 
-		//moves
-		switch (look) {
-		case Look::UP:
-			pos.y -= PLAYER_SPEED;
-			if (state == State::IDLE) StartWalkingUp();
-			else
-			{
-				if (!IsLookingUp()) ChangeAnimUp();
-			}
+	if (look == Look::LEFT)
+	{
+		pos.x += -PLAYER_SPEED;
+		if (state == State::IDLE)StartWalkingLeft();
+		else {
+			if (!IsLookingLeft()) ChangeAnimLeft();
+		}
 
-			box = GetHitbox();
-			if (map->TestCollisionWallUp(box))
-			{
-				pos.y = prev_y;
-				if (state == State::WALKING) Stop();
-			}
-			break;
-		case Look::DOWN:
-			pos.y += PLAYER_SPEED;
-			if (state == State::IDLE) StartWalkingDown();
-			else
-			{
-				if (!IsLookingDown()) ChangeAnimDown();
-			}
+		box = GetHitbox();
+		if (map->TestCollisionWallLeft(box))
+		{
+			pos.x = prev_x;
+			if (state == State::WALKING) Stop();
+		}
+	}
+	else if (look == Look::RIGHT)
+	{
+		pos.x += PLAYER_SPEED;
+		if (state == State::IDLE) StartWalkingRight();
+		else
+		{
+			if (!IsLookingRight()) ChangeAnimRight();
+		}
 
-			box = GetHitbox();
-			if (map->TestCollisionWallDown(box))
-			{
-				pos.y = prev_y;
-				if (state == State::WALKING) Stop();
-			}
-			break;
-		case Look::RIGHT:
-			pos.x += PLAYER_SPEED;
-			if (state == State::IDLE) StartWalkingRight();
-			else
-			{
-				if (!IsLookingRight()) ChangeAnimRight();
-			}
+		box = GetHitbox();
+		if (map->TestCollisionWallRight(box))
+		{
+			pos.x = prev_x;
+			if (state == State::WALKING) Stop();
+		}
+	}
+	else if (look == Look::UP) {
+		pos.y -= PLAYER_SPEED;
+		if (state == State::IDLE) StartWalkingUp();
+		else
+		{
+			if (!IsLookingUp()) ChangeAnimUp();
+		}
 
-			box = GetHitbox();
-			if (map->TestCollisionWallRight(box))
-			{
-				pos.x = prev_x;
-				if (state == State::WALKING) Stop();
-			}
-			break;
-		case Look::LEFT:
-			pos.x += -PLAYER_SPEED;
-			if (state == State::IDLE) StartWalkingLeft();
-			else
-			{
-				if (!IsLookingLeft()) ChangeAnimLeft();
-			}
+		box = GetHitbox();
+		if (map->TestCollisionWallUp(box))
+		{
+			pos.y = prev_y;
+			if (state == State::WALKING) Stop();
+		}
+	}
+	else if (look == Look::DOWN) {
+		pos.y += PLAYER_SPEED;
+		if (state == State::IDLE) StartWalkingDown();
+		else
+		{
+			if (!IsLookingDown()) ChangeAnimDown();
+		}
 
-			box = GetHitbox();
-			if (map->TestCollisionWallLeft(box))
-			{
-				pos.x = prev_x;
-				if (state == State::WALKING) Stop();
-			}
-			break;
+		box = GetHitbox();
+		if (map->TestCollisionWallDown(box))
+		{
+			pos.y = prev_y;
+			if (state == State::WALKING) Stop();
 		}
 	}
 }
