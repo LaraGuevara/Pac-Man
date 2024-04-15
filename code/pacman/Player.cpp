@@ -26,6 +26,8 @@ AppStatus Player::Initialise()
 		return AppStatus::ERROR;
 	}
 
+	//dying img "Arcade - Pac-Man - General Sprite-muertepacman"
+
 	render = new Sprite(data.GetTexture(Resource::IMG_PLAYER));
 	if (render == nullptr)
 	{
@@ -64,6 +66,18 @@ AppStatus Player::Initialise()
 	for (i = 0; i < 2; ++i){
 		sprite->AddKeyFrame((int)PlayerAnim::WALKING_DOWN, { (float)i * n, 3 * n, n, n });
     };
+
+	/*
+	
+	sprite->SetAnimationDelay((int)PlayerAnim::DYING, ANIM_DELAY);
+	for (i = 0; i < 12; ++i){
+		sprite->AddKeyFrame((int)PlayerAnim::DYING, { (float)i * n, n, n, n });
+    };
+	
+	
+	*/
+
+	//chae form dead to dying so one state has animation and the other is just tje dead character
 
 	/*sprite->SetAnimationDelay((int)PlayerAnim::DEAD, ANIM_DELAY);
 	sprite->AddKeyFrame((int)PlayerAnim::DEAD, { 0, 5 * n, n, n });*/
@@ -149,7 +163,9 @@ void Player::StartWalkingDown()
 }
 void Player::StartDying()
 {
+	state = State::DYING;
 	
+	SetAnimation((int)PlayerAnim::DYING);
 }
 void Player::ChangeAnimRight()
 {
@@ -191,8 +207,8 @@ void Player::Update()
 {
 	//Player doesn't use the "Entity::Update() { pos += dir; }" default behaviour.
 	//Instead, uses an independent behaviour for each axis.
-	MoveX();
-	MoveY();
+	MoveX();   //animation not changing
+	MoveY();  //animation changes at each press of key
 
 	Sprite* sprite = dynamic_cast<Sprite*>(render);
 	sprite->Update();

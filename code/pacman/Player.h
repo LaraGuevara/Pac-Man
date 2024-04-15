@@ -13,13 +13,13 @@
 #define PLAYER_SPEED			2
 
 //Logic states
-enum class State { INTRO, IDLE, WALKING, DEAD };
+enum class State { INTRO, IDLE, WALKING,DYING, DEAD };
 enum class Look { RIGHT, LEFT, UP, DOWN };
 
 //Rendering states
 enum class PlayerAnim {
 	IDLE_LEFT, IDLE_RIGHT, IDLE_UP, IDLE_DOWN,
-	WALKING_LEFT, WALKING_RIGHT, WALKING_UP, WALKING_DOWN,
+	WALKING_LEFT, WALKING_RIGHT, WALKING_UP, WALKING_DOWN,DYING,
 	DEAD,
 	NUM_ANIMATIONS
 };
