@@ -13,13 +13,13 @@
 #define PLAYER_SPEED			2
 
 //Logic states
-enum class State { INTRO, IDLE, WALKING,DYING, DEAD };
+enum class State { INTRO, IDLE, WALKING, DYING, DEAD };
 enum class Look { RIGHT, LEFT, UP, DOWN };
 
 //Rendering states
 enum class PlayerAnim {
 	IDLE_LEFT, IDLE_RIGHT, IDLE_UP, IDLE_DOWN,
-	WALKING_LEFT, WALKING_RIGHT, WALKING_UP, WALKING_DOWN,DYING,
+	WALKING_LEFT, WALKING_RIGHT, WALKING_UP, WALKING_DOWN, DYING,
 	DEAD,
 	NUM_ANIMATIONS
 };
@@ -48,8 +48,7 @@ private:
 	bool IsLookingDown() const;
 
 	//Player mechanics
-	void MoveX();
-	void MoveY();
+	void Move();
 
 	//Animation management
 	void SetAnimation(int id);
@@ -67,6 +66,8 @@ private:
 
 	State state;
 	Look look;
+	//new var turn to check which way the player wants to turn (initialized as up since its the starting direction)
+	Look turn = Look::UP;
 
 	TileMap* map;
 

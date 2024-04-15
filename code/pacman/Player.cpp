@@ -21,12 +21,10 @@ AppStatus Player::Initialise()
 	const int n = PLAYER_FRAME_SIZE;
 
 	ResourceManager& data = ResourceManager::Instance();
-	if (data.LoadTexture(Resource::IMG_PLAYER, "game_sprites/Arcade - Pac-Man - General Sprites-pacman.png") != AppStatus::OK)
+	if (data.LoadTexture(Resource::IMG_PLAYER, "game_sprites/Arcade - Pac-Man - all pacman.png") != AppStatus::OK)
 	{
 		return AppStatus::ERROR;
 	}
-
-	//dying img "Arcade - Pac-Man - General Sprite-muertepacman"
 
 	render = new Sprite(data.GetTexture(Resource::IMG_PLAYER));
 	if (render == nullptr)
@@ -39,48 +37,43 @@ AppStatus Player::Initialise()
 	sprite->SetNumberAnimations((int)PlayerAnim::NUM_ANIMATIONS);
 
 	sprite->SetAnimationDelay((int)PlayerAnim::IDLE_RIGHT, ANIM_DELAY);
-	sprite->AddKeyFrame((int)PlayerAnim::IDLE_RIGHT, { n, 0, n, n });
+	sprite->AddKeyFrame((int)PlayerAnim::IDLE_RIGHT, { 0, 0, n, n });
 	sprite->SetAnimationDelay((int)PlayerAnim::IDLE_LEFT, ANIM_DELAY);
-	sprite->AddKeyFrame((int)PlayerAnim::IDLE_LEFT, { n, n, n, n });
+	sprite->AddKeyFrame((int)PlayerAnim::IDLE_LEFT, { 0, n, n, n });
 	sprite->SetAnimationDelay((int)PlayerAnim::IDLE_UP, ANIM_DELAY);
-	sprite->AddKeyFrame((int)PlayerAnim::IDLE_UP, { n, 2*n, n, n });
+	sprite->AddKeyFrame((int)PlayerAnim::IDLE_UP, { 0, 2*n, n, n });
 	sprite->SetAnimationDelay((int)PlayerAnim::IDLE_DOWN, ANIM_DELAY);
-	sprite->AddKeyFrame((int)PlayerAnim::IDLE_DOWN, { n, 3 * n, n, n });
+	sprite->AddKeyFrame((int)PlayerAnim::IDLE_DOWN, { 0, 3 * n, n, n });
 
 	sprite->SetAnimationDelay((int)PlayerAnim::WALKING_RIGHT, ANIM_DELAY);
-	for (i = 0; i < 2; ++i) {
+	for (i = 0; i < 3; ++i) {
 		sprite->AddKeyFrame((int)PlayerAnim::WALKING_RIGHT, { (float)i * n,  0, n, n });
 	};
 
 	sprite->SetAnimationDelay((int)PlayerAnim::WALKING_LEFT, ANIM_DELAY);
-	for (i = 0; i < 2; ++i) {
+	for (i = 0; i < 3; ++i) {
 		sprite->AddKeyFrame((int)PlayerAnim::WALKING_LEFT, { (float)i * n, n, n, n });
 	};
 
 	sprite->SetAnimationDelay((int)PlayerAnim::WALKING_UP, ANIM_DELAY);
-	for (i = 0; i < 2; ++i){
+	for (i = 0; i < 3; ++i){
 		sprite->AddKeyFrame((int)PlayerAnim::WALKING_UP, { (float)i * n, 2*n, n, n });
 	};
 
 	sprite->SetAnimationDelay((int)PlayerAnim::WALKING_DOWN, ANIM_DELAY);
-	for (i = 0; i < 2; ++i){
+	for (i = 0; i < 3; ++i){
 		sprite->AddKeyFrame((int)PlayerAnim::WALKING_DOWN, { (float)i * n, 3 * n, n, n });
     };
 
-	/*
-	
 	sprite->SetAnimationDelay((int)PlayerAnim::DYING, ANIM_DELAY);
 	for (i = 0; i < 12; ++i){
-		sprite->AddKeyFrame((int)PlayerAnim::DYING, { (float)i * n, n, n, n });
+		sprite->AddKeyFrame((int)PlayerAnim::DYING, { (float)i * n, 4*n, n, n });
     };
-	
-	
-	*/
 
 	//chae form dead to dying so one state has animation and the other is just tje dead character
 
-	/*sprite->SetAnimationDelay((int)PlayerAnim::DEAD, ANIM_DELAY);
-	sprite->AddKeyFrame((int)PlayerAnim::DEAD, { 0, 5 * n, n, n });*/
+	sprite->SetAnimationDelay((int)PlayerAnim::DEAD, ANIM_DELAY);
+	sprite->AddKeyFrame((int)PlayerAnim::DEAD, { 0, 4 * n, n, n });
 
 	sprite->SetAnimation((int)PlayerAnim::IDLE_UP);
 
@@ -205,98 +198,129 @@ void Player::ChangeAnimDown()
 }
 void Player::Update()
 {
-	//Player doesn't use the "Entity::Update() { pos += dir; }" default behaviour.
-	//Instead, uses an independent behaviour for each axis.
-	MoveX();   //animation not changing
-	MoveY();  //animation changes at each press of key
+	//all movement in move
+	Move();   
 
 	Sprite* sprite = dynamic_cast<Sprite*>(render);
 	sprite->Update();
 }
-void Player::MoveX()
+void Player::Move()
 {
 	AABB box;
 	int prev_x = pos.x;
-
-	if (IsKeyDown(KEY_LEFT) && !IsKeyDown(KEY_RIGHT))
-	{
-		pos.x += -PLAYER_SPEED;
-		if (state == State::IDLE) StartWalkingLeft();
-		else
-		{
-			if (!IsLookingLeft()) ChangeAnimLeft();
-		}
-
-		box = GetHitbox();
-		if (map->TestCollisionWallLeft(box))
-		{
-			pos.x = prev_x;
-			if (state == State::WALKING) Stop();
-		}
-	}
-	else if (IsKeyDown(KEY_RIGHT))
-	{
-		pos.x += PLAYER_SPEED;
-		if (state == State::IDLE) StartWalkingRight();
-		else
-		{
-			if (!IsLookingRight()) ChangeAnimRight();
-		}
-
-		box = GetHitbox();
-		if (map->TestCollisionWallRight(box))
-		{
-			pos.x = prev_x;
-			if (state == State::WALKING) Stop();
-		}
-	}
-	else
-	{
-		if (state == State::WALKING) Stop();
-	}
-}
-void Player::MoveY()
-{
-	AABB box;
 	int prev_y = pos.y;
-	box = GetHitbox();
 
-	if (IsKeyDown(KEY_UP) && !IsKeyDown(KEY_DOWN))
-		{
-		pos.y -= PLAYER_SPEED;
-		if (state == State::IDLE) StartWalkingUp();
-		else
-		{
-			if (!IsLookingUp()) ChangeAnimUp();
-		}
-
-		box = GetHitbox();
-		if (map->TestCollisionWallUp(box))
-		{
-			pos.y = prev_y;
-			if (state == State::WALKING) Stop();
-		}
-		}
-	else if (IsKeyDown(KEY_DOWN))
-		{
-		pos.y += PLAYER_SPEED;
-		if (state == State::IDLE) StartWalkingDown();
-		else
-		{
-			if (!IsLookingDown()) ChangeAnimDown();
-		}
-
-		box = GetHitbox();
-		if (map->TestCollisionWallDown(box))
-		{
-			pos.y = prev_y;
-			if (state == State::WALKING) Stop();
-		}
-
-		}
-	else
+	//checks which way the player wants to turn next
+	if (IsKeyPressed(KEY_UP) || IsKeyDown(KEY_UP))
 	{
-		if (state == State::WALKING) Stop();
+		turn = Look::UP;
+		state = State::WALKING;
+	}
+	else if (IsKeyPressed(KEY_DOWN) || IsKeyDown(KEY_DOWN)) {
+		turn = Look::DOWN;
+		state = State::WALKING;
+	}
+	else if (IsKeyPressed(KEY_RIGHT) || IsKeyDown(KEY_RIGHT)) {
+		turn = Look::RIGHT;
+		state = State::WALKING;
+	}
+	else if (IsKeyPressed(KEY_LEFT) || IsKeyDown(KEY_LEFT)) {
+		turn = Look::LEFT;
+		state = State::WALKING;
+	}
+
+	if (state == State::WALKING) {
+		//checks if the turn is possible
+		switch (turn) {
+		case Look::UP:
+			pos.y -= PLAYER_SPEED;
+			box = GetHitbox();
+			if (!map->TestCollisionWallUp(box)) ChangeAnimUp(); 
+			pos.y = prev_y;
+			break;
+		case Look::DOWN:
+			pos.y += PLAYER_SPEED;
+			box = GetHitbox();
+			if (!map->TestCollisionWallDown(box)) ChangeAnimDown();
+			pos.y = prev_y;
+			break;
+		case Look::LEFT:
+			pos.x -= PLAYER_SPEED;
+			box = GetHitbox();
+			if (!map->TestCollisionWallLeft(box)) ChangeAnimLeft();
+			pos.x = prev_x;
+			break;
+		case Look::RIGHT:
+			pos.x += PLAYER_SPEED;
+			box = GetHitbox();
+			if (!map->TestCollisionWallRight(box)) ChangeAnimRight();
+			pos.x = prev_x;
+			break;
+		}
+
+		//moves
+		switch (look) {
+		case Look::UP:
+			pos.y -= PLAYER_SPEED;
+			if (state == State::IDLE) StartWalkingUp();
+			else
+			{
+				if (!IsLookingUp()) ChangeAnimUp();
+			}
+
+			box = GetHitbox();
+			if (map->TestCollisionWallUp(box))
+			{
+				pos.y = prev_y;
+				if (state == State::WALKING) Stop();
+			}
+			break;
+		case Look::DOWN:
+			pos.y += PLAYER_SPEED;
+			if (state == State::IDLE) StartWalkingDown();
+			else
+			{
+				if (!IsLookingDown()) ChangeAnimDown();
+			}
+
+			box = GetHitbox();
+			if (map->TestCollisionWallDown(box))
+			{
+				pos.y = prev_y;
+				if (state == State::WALKING) Stop();
+			}
+			break;
+		case Look::RIGHT:
+			pos.x += PLAYER_SPEED;
+			if (state == State::IDLE) StartWalkingRight();
+			else
+			{
+				if (!IsLookingRight()) ChangeAnimRight();
+			}
+
+			box = GetHitbox();
+			if (map->TestCollisionWallRight(box))
+			{
+				pos.x = prev_x;
+				if (state == State::WALKING) Stop();
+			}
+			break;
+		case Look::LEFT:
+			pos.x += -PLAYER_SPEED;
+			if (state == State::IDLE) StartWalkingLeft();
+			else
+			{
+				if (!IsLookingLeft()) ChangeAnimLeft();
+			}
+
+			box = GetHitbox();
+			if (map->TestCollisionWallLeft(box))
+			{
+				pos.x = prev_x;
+				if (state == State::WALKING) Stop();
+			}
+			break;
+		}
 	}
 }
 void Player::DrawDebug(const Color& col) const
