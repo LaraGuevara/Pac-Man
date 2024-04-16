@@ -5,9 +5,10 @@
 
 Game::Game()
 {
-    state = GameState::MAIN_MENU;
+    state = GameState::MENU;
     scene = nullptr;
     img_menu = nullptr;
+    menu1 = nullptr;
 
     target = {};
     src = {};
@@ -60,11 +61,24 @@ AppStatus Game::LoadResources()
 {
     ResourceManager& data = ResourceManager::Instance();
 
-    if (data.LoadTexture(Resource::IMG_MENU, "tilemap/Arcade - Pac-Man - Maze Parts-tileset.png") != AppStatus::OK)
+    if (data.LoadTexture(Resource::IMG_MENU, "Menus/homescreen.png") != AppStatus::OK)
     {
         return AppStatus::ERROR;
     }
     img_menu = data.GetTexture(Resource::IMG_MENU);
+
+
+    //----------------------------------------------------------
+    
+    if (data.LoadTexture(Resource::MENU1, "Menus/First menu.png") != AppStatus::OK)
+    {
+        return AppStatus::ERROR;
+    }
+    menu1 = data.GetTexture(Resource::MENU1);
+
+    
+    
+
 
     return AppStatus::OK;
 }
@@ -97,8 +111,26 @@ AppStatus Game::Update()
 
     switch (state)
     {
+
+    case GameState::MENU:
+     if (IsKeyPressed(KEY_ESCAPE)) return AppStatus::QUIT;
+     if(IsKeyPressed(KEY_SPACE))
+     {
+         
+         state = GameState::MAIN_MENU;
+     }
+     break;
+
     case GameState::MAIN_MENU:
-        if (IsKeyPressed(KEY_ESCAPE)) return AppStatus::QUIT;
+
+
+        if (IsKeyPressed(KEY_ESCAPE))
+        {
+            state = GameState::MENU;
+        }
+        
+        
+        
         if (IsKeyPressed(KEY_SPACE))
         {
             if (BeginPlay() != AppStatus::OK) return AppStatus::ERROR;
@@ -129,6 +161,11 @@ void Game::Render()
 
     switch (state)
     {
+    case GameState::MENU:
+          
+        DrawTexture(*menu1, 0, 0, WHITE);
+        break;
+
     case GameState::MAIN_MENU:
         DrawTexture(*img_menu, 0, 0, WHITE);
         break;
