@@ -72,8 +72,8 @@ AppStatus Player::Initialise()
 
 	//chae form dead to dying so one state has animation and the other is just tje dead character
 
-	sprite->SetAnimationDelay((int)PlayerAnim::DEAD, ANIM_DELAY);
-	sprite->AddKeyFrame((int)PlayerAnim::DEAD, { 0, 4 * n, n, n });
+	sprite->SetAnimationDelay((int)PlayerAnim::CLOSED, ANIM_DELAY);
+	sprite->AddKeyFrame((int)PlayerAnim::CLOSED, { 0, 4 * n, n, n });
 
 	sprite->SetAnimation((int)PlayerAnim::IDLE_UP);
 
@@ -94,6 +94,10 @@ int Player::GetScore()
 void Player::SetTileMap(TileMap* tilemap)
 {
 	map = tilemap;
+}
+void Player::Win() 
+{
+	SetAnimation((int)PlayerAnim::CLOSED);
 }
 bool Player::IsLookingRight() const
 {

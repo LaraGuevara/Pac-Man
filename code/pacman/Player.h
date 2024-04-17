@@ -13,14 +13,14 @@
 #define PLAYER_SPEED			2
 
 //Logic states
-enum class State { INTRO, IDLE, WALKING, DYING, DEAD };
+enum class State { INTRO, IDLE, WALKING, DYING, CLOSED };
 enum class Look { RIGHT, LEFT, UP, DOWN };
 
 //Rendering states
 enum class PlayerAnim {
 	IDLE_LEFT, IDLE_RIGHT, IDLE_UP, IDLE_DOWN,
 	WALKING_LEFT, WALKING_RIGHT, WALKING_UP, WALKING_DOWN, DYING,
-	DEAD,
+	CLOSED,
 	NUM_ANIMATIONS
 };
 
@@ -40,6 +40,8 @@ public:
 	void Update();
 	void DrawDebug(const Color& col) const;
 	void Release();
+
+	void Win();
 
 private:
 	bool IsLookingRight() const;

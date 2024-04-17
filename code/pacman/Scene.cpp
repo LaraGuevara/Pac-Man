@@ -238,6 +238,7 @@ void Scene::Update()
 	if (EndLevel) {
 		level_count++;
 		level->win = true;
+		player->Win();
 		win = true;
 		LoadLevel(0);
 		EndLevel = false;
