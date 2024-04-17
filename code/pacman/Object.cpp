@@ -29,7 +29,7 @@ void Object::DrawDebug(const Color& col) const
 int Object::Points() const
 {
 	if (type == ObjectType::DOT)		return POINTS_DOT;
-	else if (type == ObjectType::DOT)	return POINTS_PELLET;
+	else if (type == ObjectType::PELLET)	return POINTS_PELLET;
 	else
 	{
 		LOG("Internal error: object type invalid when giving points");

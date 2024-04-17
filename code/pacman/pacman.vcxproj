@@ -80,8 +80,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>C:\Users\Lara\Documents\raylib\include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Users\Lara\Documents\raylib\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\Users\larag\Downloads\raylib\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Users\larag\Downloads\raylib\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>

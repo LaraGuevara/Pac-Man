@@ -8,8 +8,9 @@
 
 enum class Tile {
 
-	// -1: area covered by an entity
 	EMPTY = -1,
+	// -: check if player has left the screen
+	EXIT_LEFT = -3, EXIT_RIGHT = -2,
 	//  0: air tile
 	AIR = 0,
 
@@ -65,6 +66,8 @@ public:
 	bool TestCollisionWallRight(const AABB& box) const;
 	bool TestCollisionWallUp(const AABB& box) const;
 	bool TestCollisionWallDown(const AABB& box) const;
+
+	Tile TestSideExit(const AABB& box) const;
 
 private:
 	void InitTileDictionary();

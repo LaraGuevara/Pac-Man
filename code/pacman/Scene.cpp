@@ -82,6 +82,7 @@ AppStatus Scene::LoadLevel(int stage)
 	Point pos;
 	int *map = nullptr;
 	Object *obj;
+	EndLevel = false;
 	
 	ClearLevel();
 
@@ -106,7 +107,7 @@ AppStatus Scene::LoadLevel(int stage)
 			 0,  0,  0,  0,  0,  4, 50, 25, 26,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 25, 26, 50,  3,  0,  0,  0,  0, 0,
 			 0,  0,  0,  0,  0,  4, 50, 25, 26,  0, 30, 13, 34, 70, 71, 33, 13, 29,  0, 25, 26, 50,  3,  0,  0,  0,  0, 0,
 			11, 11, 11, 11, 11, 27, 50, 37, 38,  0,  3,  0,  0,  0,  0,  0,  0,  4,  0, 37, 38, 50, 28, 11, 11, 11, 11, 11,
-			 0,  0,  0,  0,  0,  0, 50,  0,  0,  0,  3,  0,  0,  0,  0,  0,  0,  4,  0,  0,  0, 50,  0,  0,  0,  0,  0, 0,
+			-3,  0,  0,  0,  0,  0, 50,  0,  0,  0,  3,  0,  0,  0,  0,  0,  0,  4,  0,  0,  0, 50,  0,  0,  0,  0,  0, -2,
 			13, 13, 13, 13, 13, 23, 50, 35, 36,  0,  3,  0,  0,  0,  0,  0,  0,  4,  0, 35, 36, 50, 24, 13, 13, 13, 13, 13,
 			 0,  0,  0,  0,  0,  4, 50, 25, 26,  0, 32, 11, 11, 11, 11, 11, 11, 31,  0, 25, 26, 50,  3,  0,  0,  0,  0, 0,
 			 0,  0,  0,  0,  0,  4, 50, 25, 26,  0,  0,  0,  0,  100,  0,  0,  0,  0,  0, 25, 26, 50,  3,  0,  0,  0,  0, 0,
@@ -190,7 +191,10 @@ void Scene::Update()
 	}
 	//Debug levels instantly
 	if (IsKeyPressed(KEY_ONE))		LoadLevel(1);
-	else if (IsKeyPressed(KEY_TWO))	LoadLevel(2);
+	//else if (IsKeyPressed(KEY_TWO))	LoadLevel(2);
+	if (EndLevel) {
+		DrawText("WIN", WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2, 8, LIGHTGRAY);
+	}
 
 	level->Update();
 	player->Update();
@@ -225,27 +229,32 @@ void Scene::Release()
 void Scene::CheckCollisions()
 {
 	AABB player_box, obj_box;
+	int count = 0;
 	
 	player_box = player->GetHitbox();
 	auto it = objects.begin();
 	while (it != objects.end())
 	{
 		obj_box = (*it)->GetHitbox();
-		if(player_box.TestAABB(obj_box))
+		if (player_box.TestAABB(obj_box))
 		{
 			player->IncrScore((*it)->Points());
-			
+
 			//Delete the object
-			delete* it; 
+			delete* it;
 			//Erase the object from the vector and get the iterator to the next valid element
-			it = objects.erase(it); 
+			it = objects.erase(it);
 		}
 		else
 		{
 			//Move to the next object
-			++it; 
+			++it;
 		}
 	}
+	if (count == 0) {
+		EndLevel = true;
+	}
+	
 }
 void Scene::ClearLevel()
 {

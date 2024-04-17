@@ -30,6 +30,7 @@ private:
     Player* player;
     TileMap* level;
     std::vector<Object*> objects;
+    bool EndLevel = false;
 
     Camera2D camera;
     DebugMode debug;

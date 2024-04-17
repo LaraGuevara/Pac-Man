@@ -30,7 +30,7 @@ AppStatus Game::Initialise(float scale)
     h = WINDOW_HEIGHT * scale;
 
     //Initialise window
-    InitWindow((int)w, (int)h, "Vikings");
+    InitWindow((int)w, (int)h, "Pac-Man");
 
     //Render texture initialisation, used to hold the rendering result so we can easily resize it
     target = LoadRenderTexture(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -70,11 +70,11 @@ AppStatus Game::LoadResources()
 
     //----------------------------------------------------------
     
-    if (data.LoadTexture(Resource::MENU1, "Menus/First menu.png") != AppStatus::OK)
+    if (data.LoadTexture(Resource::IMG_MENU1, "Menus/First menu.png") != AppStatus::OK)
     {
         return AppStatus::ERROR;
     }
-    menu1 = data.GetTexture(Resource::MENU1);
+    menu1 = data.GetTexture(Resource::IMG_MENU1);
 
     
     

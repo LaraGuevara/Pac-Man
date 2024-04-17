@@ -273,6 +273,11 @@ void Player::Move()
 			pos.x = prev_x;
 			if (state == State::WALKING) Stop();
 		}
+		if (pos.x == 0) {
+			pos.x = WINDOW_WIDTH;
+			ChangeAnimRight();
+		}
+		
 	}
 	else if (look == Look::RIGHT)
 	{
@@ -289,6 +294,11 @@ void Player::Move()
 			pos.x = prev_x;
 			if (state == State::WALKING) Stop();
 		}
+		if (pos.x == WINDOW_WIDTH - 8) {
+			pos.x = 0;
+			ChangeAnimLeft();
+		}
+		
 	}
 	else if (look == Look::UP) {
 		pos.y -= PLAYER_SPEED;
