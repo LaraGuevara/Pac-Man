@@ -17,6 +17,7 @@ public:
 
 	void DrawDebug(const Color& col) const;
 	int Points() const;
+	int Sounds();
 
 private:
 	ObjectType type;

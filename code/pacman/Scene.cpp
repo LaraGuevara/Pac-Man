@@ -12,6 +12,11 @@ Scene::Scene()
 	camera.rotation = 0.0f;					//No rotation
 	camera.zoom = 1.0f;						//Default zoom
 
+	ResourceManager& data = ResourceManager::Instance();
+	sound_intro = data.GetSound(AudioResource::AUD_INTRO);
+	sound_munch1 = data.GetSound(AudioResource::AUD_MUNCH1);
+	sound_munch2 = data.GetSound(AudioResource::AUD_MUNCH2);
+
 	debug = DebugMode::OFF;
 }
 Scene::~Scene()
@@ -36,6 +41,7 @@ Scene::~Scene()
 }
 AppStatus Scene::Init()
 {
+
 	//Create player
 	player = new Player({ 0,0 }, State::IDLE, Look::UP);
 	if (player == nullptr)
@@ -301,6 +307,19 @@ void Scene::CheckCollisions()
 		if (player_box.TestAABB(obj_box))
 		{
 			player->IncrScore((*it)->Points());
+			if ((*it)->Sounds() == (int)ObjectType::DOT) 
+			{
+				if (munch1) 
+				{
+					PlaySound(sound_munch1);
+					munch1 = false;
+				}
+				else 
+				{
+					PlaySound(sound_munch2);
+					munch1 = true;
+				}
+			}
 
 			//Delete the object
 			delete* it;

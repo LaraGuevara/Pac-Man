@@ -3,6 +3,8 @@
 
 ResourceManager::ResourceManager()
 {
+    InitAudioDevice();
+    LoadSounds();
 }
 ResourceManager::~ResourceManager()
 {
@@ -24,6 +26,13 @@ AppStatus ResourceManager::LoadTexture(Resource id, const std::string& file_path
     //Insert the loaded texture into the map with the specified key
     textures[id] = texture;
     return AppStatus::OK;
+}
+
+void ResourceManager::LoadSounds()
+{
+    sounds[(int)AudioResource::AUD_INTRO] = LoadSound("game audio/game_start.wav");
+    sounds[(int)AudioResource::AUD_MUNCH1] = LoadSound("game audio/munch_1.wav");
+    sounds[(int)AudioResource::AUD_MUNCH2] = LoadSound("game audio/munch_2.wav");
 }
 
 //Release the texture associated with the key id
@@ -51,6 +60,11 @@ const Texture2D* ResourceManager::GetTexture(Resource id) const
     return nullptr;
 }
 
+Sound ResourceManager::GetSound(AudioResource id) const
+{
+    return (sounds[(int)id]);
+}
+
 void ResourceManager::Release()
 {
     for (auto& pair : textures)
@@ -58,4 +72,8 @@ void ResourceManager::Release()
         UnloadTexture(pair.second);
     }
     textures.clear();
+    for (int i = 0; i < (int)AudioResource::AUD_NUM; ++i) {
+        UnloadSound(sounds[i]);
+    }
+    CloseAudioDevice();
 }

@@ -33,9 +33,15 @@ private:
     Player* player;
     TileMap* level;
     std::vector<Object*> objects;
+    Sound sound_intro, sound_munch1, sound_munch2;
+
+    //level and game win check
     bool EndLevel = false;
     bool win = false;
     int level_count = 1;
+
+    //munch 1 or 2 check
+    bool munch1 = true;
 
     Camera2D camera;
     DebugMode debug;

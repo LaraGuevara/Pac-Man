@@ -36,3 +36,13 @@ int Object::Points() const
 		return 0;
 	}
 }
+int Object::Sounds()
+{
+	if (type == ObjectType::DOT)		return (int)ObjectType::DOT;
+	else if (type == ObjectType::PELLET)	return (int)ObjectType::PELLET;
+	else
+	{
+		LOG("Internal error: object type invalid when giving points");
+		return 0;
+	}
+}
