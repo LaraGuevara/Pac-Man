@@ -134,6 +134,7 @@ AppStatus Game::Update()
         if (IsKeyPressed(KEY_SPACE))
         {
             if (BeginPlay() != AppStatus::OK) return AppStatus::ERROR;
+            scene->intro = true;
             state = GameState::PLAYING;
         }
         break;

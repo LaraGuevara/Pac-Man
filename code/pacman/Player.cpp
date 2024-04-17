@@ -75,7 +75,10 @@ AppStatus Player::Initialise()
 	sprite->SetAnimationDelay((int)PlayerAnim::CLOSED, ANIM_DELAY);
 	sprite->AddKeyFrame((int)PlayerAnim::CLOSED, { 0, 4 * n, n, n });
 
-	sprite->SetAnimation((int)PlayerAnim::IDLE_UP);
+	sprite->SetAnimationDelay((int)PlayerAnim::HIDDEN, ANIM_DELAY);
+	sprite->AddKeyFrame((int)PlayerAnim::HIDDEN, { 4*n, 0, n, n });
+
+	sprite->SetAnimation((int)PlayerAnim::HIDDEN);
 
 	return AppStatus::OK;
 }
@@ -98,6 +101,10 @@ void Player::SetTileMap(TileMap* tilemap)
 void Player::Win() 
 {
 	SetAnimation((int)PlayerAnim::CLOSED);
+}
+void Player::Intro(int count) {
+	if(count <= 60) SetAnimation((int)PlayerAnim::CLOSED);
+	else SetAnimation((int)PlayerAnim::HIDDEN);
 }
 bool Player::IsLookingRight() const
 {

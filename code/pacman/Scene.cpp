@@ -43,7 +43,7 @@ AppStatus Scene::Init()
 {
 
 	//Create player
-	player = new Player({ 0,0 }, State::IDLE, Look::UP);
+	player = new Player({ 0,0 }, State::IDLE, Look::RIGHT);
 	if (player == nullptr)
 	{
 		LOG("Failed to allocate memory for Player");
@@ -77,6 +77,8 @@ AppStatus Scene::Init()
 	}
 	//Assign the tile map reference to the player to check collisions while navigating
 	player->SetTileMap(level);
+
+	PlaySound(sound_intro);
 
     return AppStatus::OK;
 }
@@ -250,7 +252,16 @@ void Scene::Update()
 		EndLevel = false;
 	}
 
-	if (win) {
+	if (intro) 
+	{
+		if (intro_count <= 0) intro = false;
+		else 
+		{
+			player->Intro(intro_count);
+			--intro_count;
+		}
+	}
+	else if (win) {
 		if (!level->win) {
 			win = false;
 			if (level_count > (int)LEVELS) {

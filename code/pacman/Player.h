@@ -20,7 +20,7 @@ enum class Look { RIGHT, LEFT, UP, DOWN };
 enum class PlayerAnim {
 	IDLE_LEFT, IDLE_RIGHT, IDLE_UP, IDLE_DOWN,
 	WALKING_LEFT, WALKING_RIGHT, WALKING_UP, WALKING_DOWN, DYING,
-	CLOSED,
+	CLOSED, HIDDEN,
 	NUM_ANIMATIONS
 };
 
@@ -42,6 +42,7 @@ public:
 	void Release();
 
 	void Win();
+	void Intro(int count);
 
 private:
 	bool IsLookingRight() const;
@@ -69,7 +70,7 @@ private:
 	State state;
 	Look look;
 	//new var turn to check which way the player wants to turn (initialized as up since its the starting direction)
-	Look turn = Look::UP;
+	Look turn = Look::RIGHT;
 
 	TileMap* map;
 
