@@ -5,6 +5,7 @@
 #include "Object.h"
 
 enum class DebugMode { OFF, SPRITES_AND_HITBOXES, ONLY_HITBOXES, SIZE };
+#define LEVELS 1
 
 class Scene
 {
@@ -16,6 +17,8 @@ public:
     void Update();
     void Render();
     void Release();
+
+    bool EndGame = false;
 
 private:
     AppStatus LoadLevel(int stage);
@@ -31,6 +34,8 @@ private:
     TileMap* level;
     std::vector<Object*> objects;
     bool EndLevel = false;
+    bool win = false;
+    int level_count = 1;
 
     Camera2D camera;
     DebugMode debug;

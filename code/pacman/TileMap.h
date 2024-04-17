@@ -69,6 +69,8 @@ public:
 
 	Tile TestSideExit(const AABB& box) const;
 
+	bool win = false;
+
 private:
 	void InitTileDictionary();
 
@@ -88,4 +90,10 @@ private:
 
 	//Tile sheet
 	const Texture2D* img_tiles;
+	const Texture2D* img_tiles_white;
+
+	//count for win screen
+	int delay = 30;
+	int white = 0;
+	int flash = 4;
 };

@@ -85,6 +85,12 @@ AppStatus TileMap::Initialise()
 	}
 	img_tiles = data.GetTexture(Resource::IMG_TILES);
 
+	if (data.LoadTexture(Resource::IMG_TILES_WHITE, "tilemap/Arcade - Pac-Man - Maze Parts-only_white_tiles.png") != AppStatus::OK)
+	{
+		return AppStatus::ERROR;
+	}
+	img_tiles_white = data.GetTexture(Resource::IMG_TILES_WHITE);
+
 	return AppStatus::OK;
 }
 AppStatus TileMap::Load(int data[], int w, int h)
@@ -188,18 +194,72 @@ void TileMap::Render()
 	Rectangle rc;
 	Vector2 pos;
 
-	for (int i = 0; i < height; ++i)
-	{
-		for (int j = 0; j < width; ++j)
-		{
-			tile = map[i * width + j];
-			if (tile != Tile::AIR)
+	if (win) {
+		if (white == 0) {
+			for (int i = 0; i < height; ++i)
 			{
-				pos.x = (float)j * TILE_SIZE;
-				pos.y = (float)i * TILE_SIZE;
-				rc = dict_rect[(int)tile];
-				DrawTextureRec(*img_tiles, rc, pos, WHITE);
+				for (int j = 0; j < width; ++j)
+				{
+					tile = map[i * width + j];
+					if (tile != Tile::AIR)
+					{
+						pos.x = (float)j * TILE_SIZE;
+						pos.y = (float)i * TILE_SIZE;
+						rc = dict_rect[(int)tile];
+						DrawTextureRec(*img_tiles_white, rc, pos, WHITE);
 
+					}
+				}
+			}
+			--delay;
+			if (delay <= 0) {
+				delay = 30;
+				white = 4;
+				--flash;
+			}
+		}
+		else {
+			for (int i = 0; i < height; ++i)
+			{
+				for (int j = 0; j < width; ++j)
+				{
+					tile = map[i * width + j];
+					if (tile != Tile::AIR)
+					{
+						pos.x = (float)j * TILE_SIZE;
+						pos.y = (float)i * TILE_SIZE;
+						rc = dict_rect[(int)tile];
+						DrawTextureRec(*img_tiles, rc, pos, WHITE);
+
+					}
+				}
+			}
+			--delay;
+			if (delay <= 0) {
+				delay = 30;
+				white = 0;
+				--flash;
+			}
+		}
+		if (flash == 0) {
+			win = false;
+		}
+
+	}
+	else {
+		for (int i = 0; i < height; ++i)
+		{
+			for (int j = 0; j < width; ++j)
+			{
+				tile = map[i * width + j];
+				if (tile != Tile::AIR)
+				{
+					pos.x = (float)j * TILE_SIZE;
+					pos.y = (float)i * TILE_SIZE;
+					rc = dict_rect[(int)tile];
+					DrawTextureRec(*img_tiles, rc, pos, WHITE);
+
+				}
 			}
 		}
 	}
@@ -208,6 +268,7 @@ void TileMap::Release()
 {
 	ResourceManager& data = ResourceManager::Instance();
 	data.ReleaseTexture(Resource::IMG_TILES);
+	data.ReleaseTexture(Resource::IMG_TILES_WHITE);
 
 	dict_rect.clear();
 }

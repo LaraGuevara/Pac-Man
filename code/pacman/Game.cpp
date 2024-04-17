@@ -139,7 +139,7 @@ AppStatus Game::Update()
         break;
 
     case GameState::PLAYING:
-        if (IsKeyPressed(KEY_ESCAPE))
+        if (IsKeyPressed(KEY_ESCAPE) || scene->EndGame)
         {
             FinishPlay();
             state = GameState::MAIN_MENU;
@@ -191,6 +191,7 @@ void Game::UnloadResources()
 {
     ResourceManager& data = ResourceManager::Instance();
     data.ReleaseTexture(Resource::IMG_MENU);
+    data.ReleaseTexture(Resource::IMG_MENU1);
 
     UnloadRenderTexture(target);
 }
