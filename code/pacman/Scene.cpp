@@ -88,7 +88,7 @@ AppStatus Scene::LoadLevel(int stage)
 	int x, y, i;
 	Tile tile;
 	Point pos;
-	int *map = nullptr;
+	int* map = nullptr;
 	Object *obj;
 	
 	ClearLevel();
@@ -224,6 +224,8 @@ AppStatus Scene::LoadLevel(int stage)
 	}
 	//Tile map
 	level->Load(map, LEVEL_WIDTH, LEVEL_HEIGHT);
+
+	delete[] map;
 
 	return AppStatus::OK;
 }
