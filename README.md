@@ -19,18 +19,18 @@ Pac-Man is a maze game developed for arcades by Namco and released in Japan on M
 
 ## GAMEPLAY
 ---
-SPACE BAR -> start
-UP KEY -> move up
-DOWN KEY -> move down
-RIGHT KEY -> move right
-LEFT  KEY -> move left
-------------------------
-**DEBUG FUNCTIONS**
+* SPACE BAR -> start
+* UP KEY -> move up
+* DOWN KEY -> move down
+* RIGHT KEY -> move right
+* LEFT  KEY -> move left
 
-F1 -> Display colliders
-F2 -> Insta-win
-F3 -> Insta-lose
-F4 -> God mode
+###DEBUG FUNCTIONS###
+
+* F1 -> Display colliders
+* F2 -> Insta-win
+* F3 -> Insta-lose
+* F4 -> God mode
 
 ##FEATURES
 ---
