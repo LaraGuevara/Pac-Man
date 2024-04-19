@@ -36,13 +36,18 @@ public:
 	void InitScore();
 	void IncrScore(int n);
 	int GetScore();
+	void LoseLives();
+	int GetLives();
 
 	void Update();
 	void DrawDebug(const Color& col) const;
 	void Release();
 
 	void Win();
+	void Lose();
 	void Intro(int count);
+
+	bool lose = false;
 
 private:
 	bool IsLookingRight() const;
@@ -75,4 +80,7 @@ private:
 	TileMap* map;
 
 	int score;
+	int lives = 3;
+	int count = 0;
+	Sound sound_death;
 };

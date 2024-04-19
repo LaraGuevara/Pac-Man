@@ -33,6 +33,7 @@ void ResourceManager::LoadSounds()
     sounds[(int)AudioResource::AUD_INTRO] = LoadSound("game audio/game_start.wav");
     sounds[(int)AudioResource::AUD_MUNCH1] = LoadSound("game audio/munch_1.wav");
     sounds[(int)AudioResource::AUD_MUNCH2] = LoadSound("game audio/munch_2.wav");
+    sounds[(int)AudioResource::AUD_DEATH] = LoadSound("game audio/pacman_death.wav");
 }
 
 //Release the texture associated with the key id

@@ -18,6 +18,7 @@ enum class AudioResource {
     AUD_INTRO,
     AUD_MUNCH1,
     AUD_MUNCH2,
+    AUD_DEATH,
     AUD_NUM
 };
 

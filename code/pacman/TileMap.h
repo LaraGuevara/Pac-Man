@@ -70,6 +70,7 @@ public:
 	Tile TestSideExit(const AABB& box) const;
 
 	bool win = false;
+	bool lose = false;
 
 private:
 	void InitTileDictionary();

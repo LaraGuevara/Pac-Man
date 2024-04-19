@@ -26,6 +26,8 @@ AppStatus Player::Initialise()
 		return AppStatus::ERROR;
 	}
 
+	sound_death = data.GetSound(AudioResource::AUD_DEATH);
+
 	render = new Sprite(data.GetTexture(Resource::IMG_PLAYER));
 	if (render == nullptr)
 	{
@@ -94,6 +96,14 @@ int Player::GetScore()
 {
 	return score;
 }
+int Player::GetLives() 
+{
+	return lives;
+}
+void Player::LoseLives() 
+{
+	--lives;
+}
 void Player::SetTileMap(TileMap* tilemap)
 {
 	map = tilemap;
@@ -101,6 +111,28 @@ void Player::SetTileMap(TileMap* tilemap)
 void Player::Win() 
 {
 	SetAnimation((int)PlayerAnim::CLOSED);
+}
+void Player::Lose() {
+	lose = true;
+	if (count == 0) {
+		PlaySound(sound_death);
+		SetAnimation((int)PlayerAnim::DYING);
+		LoseLives();
+	}
+
+	count++;
+
+	if (count < 85) {
+		if (count < 48) {
+			Sprite* sprite = dynamic_cast<Sprite*>(render);
+			sprite->Update();
+		} else SetAnimation((int)PlayerAnim::HIDDEN);
+	}
+	else {
+		lose = false;
+		count = 0;
+		SetAnimation((int)PlayerAnim::CLOSED);
+	}
 }
 void Player::Intro(int count) {
 	if(count <= 60) SetAnimation((int)PlayerAnim::CLOSED);

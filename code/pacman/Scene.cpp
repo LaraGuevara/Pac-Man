@@ -239,8 +239,9 @@ void Scene::Update()
 	{
 		debug = (DebugMode)(((int)debug + 1) % (int)DebugMode::SIZE);
 	}
-	//insta win
+	//insta win/lose
 	if (IsKeyPressed(KEY_F2))       EndLevel = true;
+	if (IsKeyPressed(KEY_F3))       lose = true;
 
 	//Debug levels instantly
 	if (IsKeyPressed(KEY_ONE))		LoadLevel(1);
@@ -271,6 +272,18 @@ void Scene::Update()
 			}
 			else {
 				LoadLevel(level_count);
+			}
+		}
+	}
+	else if (lose) {
+		player->Lose();
+		if (!player->lose) {
+			lose = false;
+			if (player->GetLives() > 0) {
+				LoadLevel(level_count);
+			}
+			else {
+				EndGame = true;
 			}
 		}
 	}
@@ -377,4 +390,5 @@ void Scene::RenderGUI() const
 {
 	//Temporal approach
 	DrawText(TextFormat("SCORE : %d", player->GetScore()), 10, 10, 8, LIGHTGRAY);
+	DrawText(TextFormat("LIVES : %d", player->GetLives()), 10, WINDOW_HEIGHT-10, 8, LIGHTGRAY);
 }
