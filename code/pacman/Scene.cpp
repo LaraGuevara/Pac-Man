@@ -27,6 +27,12 @@ Scene::~Scene()
 		delete player;
 		player = nullptr;
 	}
+	if (enemy != nullptr)
+	{
+		enemy->Release();
+		delete enemy;
+		enemy = nullptr;
+	}
     if (level != nullptr)
     {
 		level->Release();
@@ -49,13 +55,26 @@ AppStatus Scene::Init()
 		LOG("Failed to allocate memory for Player");
 		return AppStatus::ERROR;
 	}
+	//cREATE ENEMY (BLUE)
+	enemy = new Enemy({10,10}, State_e::IDLE, Look_e::RIGHT);
+	if (enemy == nullptr)
+	{
+		LOG("Failed to allocate memory for enemy");
+		return AppStatus::ERROR;
+	}
 	//Initialise player
 	if (player->Initialise() != AppStatus::OK)
 	{
 		LOG("Failed to initialise Player");
 		return AppStatus::ERROR;
 	}
+	//initialize enemy blue
 
+	if (enemy->Initialise() != AppStatus::OK)
+	{
+		LOG("Failed to initialise Player");
+		return AppStatus::ERROR;
+	}
 	//Create level 
     level = new TileMap();
     if (level == nullptr)
@@ -77,7 +96,7 @@ AppStatus Scene::Init()
 	}
 	//Assign the tile map reference to the player to check collisions while navigating
 	player->SetTileMap(level);
-
+	enemy->SetTileMap(level);
 	PlaySound(sound_intro);
 
     return AppStatus::OK;
@@ -155,7 +174,7 @@ AppStatus Scene::LoadLevel(int stage)
 			 0,  0,  0,  0,  0,  4, 50, 25, 26,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 25, 26, 50,  3,  0,  0,  0,  0, 0,
 			 0,  0,  0,  0,  0,  4, 50, 25, 26,  0, 30, 13, 34, 70, 71, 33, 13, 29,  0, 25, 26, 50,  3,  0,  0,  0,  0, 0,
 			11, 11, 11, 11, 11, 27, 50, 37, 38,  0,  3,  0,  0,  0,  0,  0,  0,  4,  0, 37, 38, 50, 28, 11, 11, 11, 11, 11,
-			-3,  0,  0,  0,  0,  0, 50,  0,  0,  0,  3,  0,  0,  0,  0,  0,  0,  4,  0,  0,  0, 50,  0,  0,  0,  0,  0, -2,
+			-3,  0,  0,  0,  0,  0, 50,  0,  0,  0,  3,  0,  0,  99,  0,  0,  0,  4,  0,  0,  0, 50,  0,  0,  0,  0,  0, -2,
 			13, 13, 13, 13, 13, 23, 50, 35, 36,  0,  3,  0,  0,  0,  0,  0,  0,  4,  0, 35, 36, 50, 24, 13, 13, 13, 13, 13,
 			 0,  0,  0,  0,  0,  4, 50, 25, 26,  0, 32, 11, 11, 11, 11, 11, 11, 31,  0, 25, 26, 50,  3,  0,  0,  0,  0, 0,
 			 0,  0,  0,  0,  0,  4, 50, 25, 26,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 25, 26, 50,  3,  0,  0,  0,  0, 0,
@@ -201,6 +220,13 @@ AppStatus Scene::LoadLevel(int stage)
 				pos.x = x * TILE_SIZE + TILE_SIZE / 2;
 				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
 				player->SetPos(pos);
+				map[i] = 0;
+			}
+			else if (tile == Tile::ENEMY)
+			{
+				pos.x = x * TILE_SIZE + TILE_SIZE / 2;
+				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
+				enemy->SetPos(pos);
 				map[i] = 0;
 			}
 			else if (tile == Tile::DOT)
@@ -321,10 +347,11 @@ void Scene::Release()
 }
 void Scene::CheckCollisions()
 {
-	AABB player_box, obj_box;
+	AABB player_box, obj_box, enemy_box;
 	int count = 0;
 	
 	player_box = player->GetHitbox();
+	enemy_box = enemy->GetHitbox();
 	auto it = objects.begin();
 	while (it != objects.end())
 	{
@@ -391,4 +418,5 @@ void Scene::RenderGUI() const
 	//Temporal approach
 	DrawText(TextFormat("SCORE : %d", player->GetScore()), 10, 10, 8, LIGHTGRAY);
 	DrawText(TextFormat("LIVES : %d", player->GetLives()), 10, WINDOW_HEIGHT-10, 8, LIGHTGRAY);
+	DrawText(TextFormat("LEVEL : 1"), WINDOW_WIDTH-50, WINDOW_HEIGHT - 10, 8, LIGHTGRAY);
 }

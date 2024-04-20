@@ -1,6 +1,7 @@
 #pragma once
 #include <raylib.h>
 #include "Player.h"
+#include "Enemys.h"
 #include "TileMap.h"
 #include "Object.h"
 
@@ -32,6 +33,7 @@ private:
     void RenderGUI() const;
 
     Player* player;
+    Enemy* enemy;
     TileMap* level;
     std::vector<Object*> objects;
     Sound sound_intro, sound_munch1, sound_munch2;
