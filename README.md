@@ -4,7 +4,7 @@
 
 ## YOUTUBE
 ---
-usage here
+[Gameplay video](https://youtu.be/tNBN89cQTlE)
 
 ## MEMBERS 
 ---
