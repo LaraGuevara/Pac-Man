@@ -122,7 +122,7 @@ void Player::Lose() {
 
 	count++;
 
-	if (count < 85) {
+	if (count < 150) {
 		if (count < 48) {
 			Sprite* sprite = dynamic_cast<Sprite*>(render);
 			sprite->Update();

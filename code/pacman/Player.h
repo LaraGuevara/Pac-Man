@@ -5,11 +5,11 @@
 //Representation model size: 16x16
 #define PLAYER_FRAME_SIZE		16
 
-//Logical model size: 12x28
+//Logical model size: 8x8 (tile size)
 #define PLAYER_PHYSICAL_WIDTH	8
 #define PLAYER_PHYSICAL_HEIGHT	8
 
-//Horizontal speed and vertical speed while falling down
+//Horizontal speed
 #define PLAYER_SPEED			2
 
 //Logic states
@@ -74,7 +74,7 @@ private:
 
 	State state;
 	Look look;
-	//new var turn to check which way the player wants to turn (initialized as up since its the starting direction)
+	//new var turn to check which way the player wants to turn (initialized as right since its the starting direction)
 	Look turn = Look::RIGHT;
 
 	TileMap* map;
