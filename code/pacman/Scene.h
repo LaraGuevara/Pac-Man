@@ -75,6 +75,13 @@ private:
     //intro frame length
     int intro_count = 240;
 
+    //player and enemies intial position save
+    int playerX, playerY;
+    int blinkyX, blinkyY;
+    /*int pinkyX, pinkyY;*/
+    int inkyX, inkyY;
+    /*int clydeX, clydeY;*/
+
     Camera2D camera;
     DebugMode debug;
 };
