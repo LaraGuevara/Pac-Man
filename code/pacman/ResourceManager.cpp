@@ -31,9 +31,17 @@ AppStatus ResourceManager::LoadTexture(Resource id, const std::string& file_path
 void ResourceManager::LoadSounds()
 {
     sounds[(int)AudioResource::AUD_INTRO] = LoadSound("game audio/game_start.wav");
+
     sounds[(int)AudioResource::AUD_MUNCH1] = LoadSound("game audio/munch_1.wav");
     sounds[(int)AudioResource::AUD_MUNCH2] = LoadSound("game audio/munch_2.wav");
+
     sounds[(int)AudioResource::AUD_DEATH] = LoadSound("game audio/pacman_death.wav");
+
+    sounds[(int)AudioResource::AUD_SIREN1] = LoadSound("game audio/siren_1.wav");
+    sounds[(int)AudioResource::AUD_SIREN2] = LoadSound("game audio/siren_2.wav");
+    sounds[(int)AudioResource::AUD_SIREN3] = LoadSound("game audio/siren_3.wav");
+    sounds[(int)AudioResource::AUD_SIREN4] = LoadSound("game audio/siren_4.wav");
+    sounds[(int)AudioResource::AUD_SIREN5] = LoadSound("game audio/siren_5.wav");
 }
 
 //Release the texture associated with the key id

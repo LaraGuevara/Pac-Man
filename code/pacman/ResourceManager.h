@@ -11,6 +11,7 @@ enum class Resource {
     IMG_PLAYER,
     IMG_TILES,
     IMG_TILES_WHITE,
+    IMG_ENEMY,
     IMG_ITEMS
 };
 
@@ -19,6 +20,11 @@ enum class AudioResource {
     AUD_MUNCH1,
     AUD_MUNCH2,
     AUD_DEATH,
+    AUD_SIREN1,
+    AUD_SIREN2,
+    AUD_SIREN3,
+    AUD_SIREN4,
+    AUD_SIREN5,
     AUD_NUM
 };
 

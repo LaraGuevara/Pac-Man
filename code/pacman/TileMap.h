@@ -43,9 +43,10 @@ enum class Tile {
 	SPECIAL_FIRST = DOT,
 	SPECIAL_LAST = PELLET,
 
-    ENEMY = 99,
+	PLAYER = 100,
 
-	PLAYER = 100
+	//enemies
+	BLINKY = 101, PINKY, INKY, CLYDE
 	
 
 	/*ENTITY_FIRST = PLAYER,

@@ -4,12 +4,13 @@
 #include "Globals.h"
 #include <raymath.h>
 
-Enemy::Enemy(const Point& p, State_e s, Look_e view) :
+Enemy::Enemy(const Point& p, State_e s, Look_e view, EnemyType t) :
 	Entity(p, ENEMY_PHYSICAL_WIDTH, ENEMY_PHYSICAL_HEIGHT, ENEMY_FRAME_SIZE, ENEMY_FRAME_SIZE)
 {
 	state = s;
 	look = view;
 	map = nullptr;
+	type = t;
 	
 }
 Enemy::~Enemy()
@@ -17,11 +18,25 @@ Enemy::~Enemy()
 }
 AppStatus Enemy::Initialise()
 {
-	int i;
 	const int n = ENEMY_FRAME_SIZE;
+	int k;
+	switch (type) {
+	case EnemyType::BLINKY:
+		k = n * 2;
+		break;
+	case EnemyType::PINKY:
+		k = n;
+		break;
+	case EnemyType::INKY:
+		k = 0;
+		break;
+	case EnemyType::CLYDE:
+		k = n * 3;
+		break;
+	}
 
 	ResourceManager& data = ResourceManager::Instance();
-	if (data.LoadTexture(Resource::IMG_ENEMY, "game_sprites/Arcade - Pac-Man - General Sprites-fantasmaazul.png") != AppStatus::OK)
+	if (data.LoadTexture(Resource::IMG_ENEMY, "game_sprites/Arcade - Pac-Man - General Sprites-allghosts.png") != AppStatus::OK)
 	{
 		return AppStatus::ERROR;
 	}
@@ -31,54 +46,39 @@ AppStatus Enemy::Initialise()
 	render = new Sprite(data.GetTexture(Resource::IMG_ENEMY));
 	if (render == nullptr)
 	{
-		LOG("Failed to allocate memory for player sprite");
+		LOG("Failed to allocate memory for enemy sprite");
 		return AppStatus::ERROR;
 	}
 
 	Sprite* sprite = dynamic_cast<Sprite*>(render);
 	sprite->SetNumberAnimations((int)EnemyAnim::NUM_ANIMATIONS);
 
-	sprite->SetAnimationDelay((int)EnemyAnim::IDLE_RIGHT, ANIM_DELAY);
-	sprite->AddKeyFrame((int)EnemyAnim::IDLE_RIGHT, { 0, 0, n, n });
-	sprite->SetAnimationDelay((int)EnemyAnim::IDLE_LEFT, ANIM_DELAY);
-	sprite->AddKeyFrame((int)EnemyAnim::IDLE_LEFT, { 0, 2 * n, n, n });
-	sprite->SetAnimationDelay((int)EnemyAnim::IDLE_UP, ANIM_DELAY);
-	sprite->AddKeyFrame((int)EnemyAnim::IDLE_UP, { 0, 4 * n, n, n });
-	sprite->SetAnimationDelay((int)EnemyAnim::IDLE_DOWN, ANIM_DELAY);
-	sprite->AddKeyFrame((int)EnemyAnim::IDLE_DOWN, { 0, 6 * n, n, n });
+	sprite->SetAnimationDelay((int)EnemyAnim::IDLE, ANIM_DELAY);
+	sprite->AddKeyFrame((int)EnemyAnim::IDLE, { n*4, (float)k, n, n });
+
+	sprite->SetAnimationDelay((int)EnemyAnim::HIDDEN, ANIM_DELAY);
+	sprite->AddKeyFrame((int)EnemyAnim::HIDDEN, { n * 4, 5*n, n, n });
 
 	sprite->SetAnimationDelay((int)EnemyAnim::WALKING_RIGHT, ANIM_DELAY);
-	for (i = 0; i < 3; ++i) {
-		sprite->AddKeyFrame((int)EnemyAnim::WALKING_RIGHT, { (float)i * n,  0, n, n });
-	};
+	sprite->AddKeyFrame((int)EnemyAnim::WALKING_RIGHT, { 0, (float)k, n, n });
 
 	sprite->SetAnimationDelay((int)EnemyAnim::WALKING_LEFT, ANIM_DELAY);
-	for (i = 0; i < 3; ++i) {
-		sprite->AddKeyFrame((int)EnemyAnim::WALKING_LEFT, { (float)i * n, 2 * n, n, n });
-	};
+	sprite->AddKeyFrame((int)EnemyAnim::WALKING_LEFT, { 2 * n, (float)k, n, n });
 
 	sprite->SetAnimationDelay((int)EnemyAnim::WALKING_UP, ANIM_DELAY);
-	for (i = 0; i < 3; ++i) {
-		sprite->AddKeyFrame((int)EnemyAnim::WALKING_UP, { (float)i * n, 4 * n, n, n });
-	};
+	sprite->AddKeyFrame((int)EnemyAnim::WALKING_UP, { 4 * n, (float)k, n, n });
 
 	sprite->SetAnimationDelay((int)EnemyAnim::WALKING_DOWN, ANIM_DELAY);
-	for (i = 0; i < 3; ++i) {
-		sprite->AddKeyFrame((int)EnemyAnim::WALKING_DOWN, { (float)i * n, 6 * n, n, n });
-	};
-	/*
-	sprite->SetAnimationDelay((int)EnemyAnim::DYING, ANIM_DELAY);
-	for (i = 0; i < 12; ++i) {
-		sprite->AddKeyFrame((int)EnemyAnim::DYING, { (float)i * n, 4 * n, n, n });
-	};*/
-
-	//chae form dead to dying so one state has animation and the other is just tje dead character
+	sprite->AddKeyFrame((int)EnemyAnim::WALKING_DOWN, { 6 * n, (float)k, n, n });
 
 	
 
 	return AppStatus::OK;
 }
 
+void Enemy::WinLose() {
+	SetAnimation((int)EnemyAnim::HIDDEN);
+}
 
 void Enemy::SetTileMap(TileMap* tilemap)
 {
@@ -115,10 +115,7 @@ void Enemy::Stop()
 {
 	dir = { 0,0 };
 	state = State_e::IDLE;
-	if (IsLookingRight())	SetAnimation((int)EnemyAnim::IDLE_RIGHT);
-	else if (IsLookingUp())  SetAnimation((int)EnemyAnim::IDLE_UP);
-	else if (IsLookingDown())  SetAnimation((int)EnemyAnim::IDLE_DOWN);
-	else					SetAnimation((int)EnemyAnim::IDLE_LEFT);
+	SetAnimation((int)EnemyAnim::IDLE);
 }
 void Enemy::StartWalkingLeft()
 {
@@ -155,7 +152,7 @@ void Enemy::ChangeAnimRight()
 	look = Look_e::RIGHT;
 	switch (state)
 	{
-	case State_e::IDLE:	 SetAnimation((int)EnemyAnim::IDLE_RIGHT);    break;
+	case State_e::IDLE:	 SetAnimation((int)EnemyAnim::IDLE);    break;
 	case State_e::WALKING: SetAnimation((int)EnemyAnim::WALKING_RIGHT); break;
 	}
 }
@@ -164,7 +161,7 @@ void Enemy::ChangeAnimLeft()
 	look = Look_e::LEFT;
 	switch (state)
 	{
-	case State_e::IDLE:	 SetAnimation((int)EnemyAnim::IDLE_LEFT);    break;
+	case State_e::IDLE:	 SetAnimation((int)EnemyAnim::IDLE);    break;
 	case State_e::WALKING: SetAnimation((int)EnemyAnim::WALKING_LEFT); break;
 	}
 }
@@ -173,7 +170,7 @@ void Enemy::ChangeAnimUp()
 	look = Look_e::UP;
 	switch (state)
 	{
-	case State_e::IDLE:	 SetAnimation((int)EnemyAnim::IDLE_UP);    break;
+	case State_e::IDLE:	 SetAnimation((int)EnemyAnim::IDLE);    break;
 	case State_e::WALKING: SetAnimation((int)EnemyAnim::WALKING_UP); break;
 	}
 }
@@ -182,7 +179,7 @@ void Enemy::ChangeAnimDown()
 	look = Look_e::DOWN;
 	switch (state)
 	{
-	case State_e::IDLE:	 SetAnimation((int)EnemyAnim::IDLE_DOWN);    break;
+	case State_e::IDLE:	 SetAnimation((int)EnemyAnim::IDLE);    break;
 	case State_e::WALKING: SetAnimation((int)EnemyAnim::WALKING_DOWN); break;
 	}
 }
@@ -200,39 +197,6 @@ void Enemy::Move()
 	int prev_x = pos.x;
 	int prev_y = pos.y;
 
-	//checks which way the Enemy wants to turn next
-	
-
-	//checks if the turn is possible
-	if (turn != look) {
-		switch (turn) {
-		/*case Look::UP:
-			pos.y -= ENEMY_SPEED;
-			box = GetHitbox();
-			if (!map->TestCollisionWallUp(box)) ChangeAnimUp();
-			pos.y = prev_y;
-			break;
-		case Look::DOWN:
-			pos.y += PLAYER_SPEED;
-			box = GetHitbox();
-			if (!map->TestCollisionWallDown(box)) ChangeAnimDown();
-			pos.y = prev_y;
-			break;*/
-		case Look_e::LEFT:
-			pos.x -= ENEMY_SPEED;
-			box = GetHitbox();
-			if (!map->TestCollisionWallLeft(box)) ChangeAnimLeft();
-			pos.x = prev_x;
-			break;
-		case Look_e::RIGHT:
-			pos.x += ENEMY_SPEED;
-			box = GetHitbox();
-			if (!map->TestCollisionWallRight(box)) ChangeAnimRight();
-			pos.x = prev_x;
-			break;
-		}
-	}
-
 	if (look == Look_e::LEFT)
 	{
 		pos.x += -ENEMY_SPEED;
@@ -245,11 +209,8 @@ void Enemy::Move()
 		if (map->TestCollisionWallLeft(box))
 		{
 			pos.x = prev_x;
-			if (state == State_e::WALKING) Stop();
-		}
-		if (pos.x == 0) {
-			pos.x = WINDOW_WIDTH;
-			ChangeAnimRight();
+			look = Look_e::RIGHT;
+			StartWalkingRight();
 		}
 
 	}
@@ -266,45 +227,18 @@ void Enemy::Move()
 		if (map->TestCollisionWallRight(box))
 		{
 			pos.x = prev_x;
-			if (state == State_e::WALKING) Stop();
-		}
-		if (pos.x == WINDOW_WIDTH - 8) {
-			pos.x = 0;
-			ChangeAnimLeft();
+			look = Look_e::LEFT;
+			StartWalkingLeft();
 		}
 
 	}
-	/*else if (look == Look::UP) {
-		pos.y -= PLAYER_SPEED;
-		if (state == State::IDLE) StartWalkingUp();
-		else
-		{
-			if (!IsLookingUp()) ChangeAnimUp();
-		}
-
-		box = GetHitbox();
-		if (map->TestCollisionWallUp(box))
-		{
-			pos.y = prev_y;
-			if (state == State::WALKING) Stop();
-		}
-	}
-	else if (look == Look::DOWN) {
-		pos.y += PLAYER_SPEED;
-		if (state == State::IDLE) StartWalkingDown();
-		else
-		{
-			if (!IsLookingDown()) ChangeAnimDown();
-		}
-
-		box = GetHitbox();
-		if (map->TestCollisionWallDown(box))
-		{
-			pos.y = prev_y;
-			if (state == State::WALKING) Stop();
-		}
-	}*/
 }
+
+void Enemy::DrawDebug(const Color& col) const
+{
+	Entity::DrawHitbox(pos.x, pos.y, width, height, col);
+}
+
 
 void Enemy::Release()
 {

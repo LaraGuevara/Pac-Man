@@ -60,6 +60,9 @@
     <ClInclude Include="Object.h">
       <Filter>Entities</Filter>
     </ClInclude>
+    <ClInclude Include="Enemys.h">
+      <Filter>Entities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Globals.cpp">
@@ -99,6 +102,9 @@
       <Filter>Entities</Filter>
     </ClCompile>
     <ClCompile Include="Object.cpp">
+      <Filter>Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemys.cpp">
       <Filter>Entities</Filter>
     </ClCompile>
   </ItemGroup>
