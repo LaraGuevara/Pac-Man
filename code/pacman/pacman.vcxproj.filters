@@ -63,6 +63,9 @@
     <ClInclude Include="Enemys.h">
       <Filter>Entities</Filter>
     </ClInclude>
+    <ClInclude Include="UI.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Globals.cpp">
@@ -106,6 +109,9 @@
     </ClCompile>
     <ClCompile Include="Enemys.cpp">
       <Filter>Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="UI.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

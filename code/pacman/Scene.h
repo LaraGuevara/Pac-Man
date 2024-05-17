@@ -4,11 +4,12 @@
 #include "Enemys.h"
 #include "TileMap.h"
 #include "Object.h"
+#include "UI.h"
 
 enum class DebugMode { OFF, SPRITES_AND_HITBOXES, ONLY_HITBOXES, SIZE };
 
 //total amount of created levels
-#define LEVELS 1
+#define LEVELS 2
 
 //amount of items in a level divided by 5 (for the siren)
 #define FRACTION5_ITEMS 48
@@ -81,6 +82,8 @@ private:
     /*int pinkyX, pinkyY;*/
     int inkyX, inkyY;
     /*int clydeX, clydeY;*/
+
+
 
     Camera2D camera;
     DebugMode debug;

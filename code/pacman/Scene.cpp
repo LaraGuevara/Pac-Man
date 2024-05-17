@@ -10,6 +10,8 @@ Scene::Scene()
 	inky = nullptr;
 
     level = nullptr;
+
+
 	
 	camera.target = { 0, 0 };				//Center of the screen
 	camera.offset = { 0, 0 };	//Offset from the target (center of the screen)
@@ -185,7 +187,7 @@ AppStatus Scene::LoadLevel(int stage)
 			 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 0 
 		};
 	}
-	else if (stage == 1)
+	else if (stage == 1 or stage == 2)
 	{
 		map = new int[size] {
 			 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 0,
@@ -226,7 +228,7 @@ AppStatus Scene::LoadLevel(int stage)
 			 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 0 
 		};
 
-		player->InitScore();
+		if(stage == 1) player->InitScore();
 		siren = 0;
 	}
 	else
@@ -503,6 +505,6 @@ void Scene::RenderGUI() const
 	//Temporal approach
 	DrawText(TextFormat("SCORE : %d", player->GetScore()), 10, 10, 8, LIGHTGRAY);
 	DrawText(TextFormat("LIVES : %d", player->GetLives()), 10, WINDOW_HEIGHT-10, 8, LIGHTGRAY);
-	DrawText(TextFormat("LEVEL : 1"), WINDOW_WIDTH-50, WINDOW_HEIGHT - 10, 8, LIGHTGRAY);
+	DrawText(TextFormat("LEVEL : %d", level_count), WINDOW_WIDTH-50, WINDOW_HEIGHT - 10, 8, LIGHTGRAY);
 	if(god_mode) DrawText(TextFormat("GOD MODE ACTIVE"), WINDOW_WIDTH - 100, 10, 8, LIGHTGRAY);
 }
