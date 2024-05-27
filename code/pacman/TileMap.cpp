@@ -243,6 +243,7 @@ void TileMap::Render()
 		}
 		if (flash == 0) {
 			win = false;
+			flash = 4;
 		}
 
 	}

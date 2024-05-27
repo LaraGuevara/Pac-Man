@@ -324,11 +324,17 @@ void Scene::Update()
 	}
 
 	//Debug levels instantly
-	if (IsKeyPressed(KEY_ONE))		LoadLevel(1);
+	if (IsKeyPressed(KEY_ONE)) {
+		level_count = 1;
+		LoadLevel(1);
+	}
+	if (IsKeyPressed(KEY_TWO)) {
+		level_count = 2;
+		LoadLevel(2);
+	}
 
 	if (EndLevel) {
 		StopSound(sirens[siren]);
-		level_count++;
 		level->win = true;
 		player->Win();
 		inky->WinLose();
@@ -349,6 +355,7 @@ void Scene::Update()
 	}
 	else if (win) {
 		if (!level->win) {
+			level_count++;
 			win = false;
 			if (level_count > (int)LEVELS) {
 				EndGame = true;
