@@ -13,6 +13,8 @@ Scene::Scene()
 
 	fruitUI = nullptr;
 	livesUI = nullptr;
+
+	font = nullptr;
 	
 	camera.target = { 0, 0 };				//Center of the screen
 	camera.offset = { 0, 0 };	//Offset from the target (center of the screen)
@@ -69,6 +71,10 @@ Scene::~Scene()
 		livesUI->Release();
 		delete livesUI;
 		livesUI = nullptr;
+	}
+	if (font != nullptr) {
+		delete font;
+		font = nullptr;
 	}
 	for (Entity* obj : objects)
 	{
@@ -157,6 +163,17 @@ AppStatus Scene::Init()
 	inky->SetTileMap(level);
 	blinky->SetTileMap(level);
 	PlaySound(sound_intro);
+
+	font = new Text();
+	if (font == nullptr) {
+		LOG("Failed to allocate memory for font");
+		return AppStatus::ERROR;
+	}
+	if (font->Initialise(Resource::IMG_FONT, "game_sprites/Arcade - Pac-Man - font.png", ' ', 8) != AppStatus::OK)
+	{
+		LOG("Failed to initialise Level");
+		return AppStatus::ERROR;
+	}
 
     return AppStatus::OK;
 }
@@ -542,11 +559,14 @@ void Scene::RenderObjectsDebug(const Color& col) const
 }
 void Scene::RenderGUI() const
 {
-	//Temporal approach
-	DrawText(TextFormat("SCORE : %d", player->GetScore()), 10, 10, 8, LIGHTGRAY);
+	font->Draw(10, 5, TextFormat("1UP"));
+	font->Draw(10, 13, TextFormat("%d", player->GetScore()));
 	
 	fruitUI->RenderUI(level_count, collectedFruit, player->GetLives());
 	livesUI->RenderUI(level_count, collectedFruit, player->GetLives());
 
-	if(god_mode) DrawText(TextFormat("GOD MODE ACTIVE"), WINDOW_WIDTH - 100, 10, 8, LIGHTGRAY);
+	if (intro) font->Draw((WINDOW_WIDTH / 2)-22, (WINDOW_HEIGHT / 2)+15, TextFormat("READY!"), YELLOW);
+	if (intro_count > 60) font->Draw((WINDOW_WIDTH / 2) - 40, (WINDOW_HEIGHT / 2) - 32, TextFormat("PLAYER ONE"), CYANBLUE);
+
+	if(god_mode) font->Draw(WINDOW_WIDTH - 125, 5, TextFormat("GOD MODE ACTIVE"));
 }

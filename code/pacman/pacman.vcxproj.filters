@@ -66,6 +66,9 @@
     <ClInclude Include="UI.h">
       <Filter>Render</Filter>
     </ClInclude>
+    <ClInclude Include="Text.h">
+      <Filter>Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Globals.cpp">
@@ -111,6 +114,9 @@
       <Filter>Entities</Filter>
     </ClCompile>
     <ClCompile Include="UI.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Text.cpp">
       <Filter>Render</Filter>
     </ClCompile>
   </ItemGroup>

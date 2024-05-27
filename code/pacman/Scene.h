@@ -5,6 +5,7 @@
 #include "TileMap.h"
 #include "Object.h"
 #include "UI.h"
+#include "Text.h"
 
 enum class DebugMode { OFF, SPRITES_AND_HITBOXES, ONLY_HITBOXES, SIZE };
 enum class UITypes { FRUIT, LIVES};
@@ -17,6 +18,9 @@ enum class UITypes { FRUIT, LIVES};
 
 //siren length
 #define SIREN_LENGTH 48
+
+//font color
+#define CYANBLUE CLITERAL(Color){0, 255, 255, 255}
 
 class Scene
 {
@@ -90,6 +94,8 @@ private:
 
     //has fruit been collected? check
     bool collectedFruit = false;
+
+    Text* font;
 
 
     Camera2D camera;

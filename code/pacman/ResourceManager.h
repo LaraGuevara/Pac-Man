@@ -12,7 +12,8 @@ enum class Resource {
     IMG_TILES,
     IMG_TILES_WHITE,
     IMG_ENEMY,
-    IMG_ITEMS
+    IMG_ITEMS,
+    IMG_FONT
 };
 
 enum class AudioResource {
