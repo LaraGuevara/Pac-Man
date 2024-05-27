@@ -60,20 +60,80 @@ AppStatus Enemy::Initialise()
 	sprite->AddKeyFrame((int)EnemyAnim::HIDDEN, { n * 4, 5*n, n, n });
 
 	sprite->SetAnimationDelay((int)EnemyAnim::WALKING_RIGHT, ANIM_DELAY);
-	sprite->AddKeyFrame((int)EnemyAnim::WALKING_RIGHT, { 0, (float)k, n, n });
+	for (int i = 0; i < 2; ++i) {
+		sprite->AddKeyFrame((int)EnemyAnim::WALKING_RIGHT, { (float)i*n, (float)k, n, n });
+	}
 
 	sprite->SetAnimationDelay((int)EnemyAnim::WALKING_LEFT, ANIM_DELAY);
-	sprite->AddKeyFrame((int)EnemyAnim::WALKING_LEFT, { 2 * n, (float)k, n, n });
+	for (int i = 0; i < 2; ++i) {
+		sprite->AddKeyFrame((int)EnemyAnim::WALKING_LEFT, { 2 * n + ((float)i*n), (float)k, n, n });
+	}
 
 	sprite->SetAnimationDelay((int)EnemyAnim::WALKING_UP, ANIM_DELAY);
-	sprite->AddKeyFrame((int)EnemyAnim::WALKING_UP, { 4 * n, (float)k, n, n });
+	for (int i = 0; i < 2; ++i) {
+		sprite->AddKeyFrame((int)EnemyAnim::WALKING_UP, { 4 * n + ((float)i * n), (float)k, n, n });
+	}
 
 	sprite->SetAnimationDelay((int)EnemyAnim::WALKING_DOWN, ANIM_DELAY);
-	sprite->AddKeyFrame((int)EnemyAnim::WALKING_DOWN, { 6 * n, (float)k, n, n });
+	for (int i = 0; i < 2; ++i) {
+		sprite->AddKeyFrame((int)EnemyAnim::WALKING_DOWN, { 6 * n + ((float)i * n), (float)k, n, n });
+	}
 
-	
+	sprite->SetAnimationDelay((int)EnemyAnim::PELLET, ANIM_DELAY);
+	for (int i = 0; i < 2; ++i) {
+		sprite->AddKeyFrame((int)EnemyAnim::PELLET, { (float)i * n, 4*n , n, n });
+	}
+
+	sprite->SetAnimationDelay((int)EnemyAnim::PELLET_FLASH, ANIM_DELAY);
+	for (int i = 0; i < 2; ++i) {
+		sprite->AddKeyFrame((int)EnemyAnim::PELLET_FLASH, { 2*n +((float)i * n), 4*n , n, n });
+	}
 
 	return AppStatus::OK;
+}
+
+void Enemy::Intro(int count) {
+	if (count <= 60) SetAnimation((int)EnemyAnim::IDLE);
+	else SetAnimation((int)EnemyAnim::HIDDEN);
+}
+
+void Enemy::Pellet(bool ifPellet, int count) {
+	if (ifPellet) {
+		state = State_e::PELLET;
+		vulnearble = true;
+		if (count < 300) {
+			if(flash) SetAnimation((int)EnemyAnim::PELLET_FLASH);
+			else SetAnimation((int)EnemyAnim::PELLET);
+			--delay;
+			if (delay <= 0) {
+				delay = 30;
+				if (flash) flash = false;
+				else flash = true;
+			}
+
+		}
+		else {
+			SetAnimation((int)EnemyAnim::PELLET);
+		}
+	}
+	else {
+		state = State_e::WALKING;
+		switch (look) {
+		case Look_e::DOWN:
+			ChangeAnimDown();
+			break;
+		case Look_e::UP:
+			ChangeAnimUp();
+			break;
+		case Look_e::RIGHT:
+			ChangeAnimRight();
+			break;
+		case Look_e::LEFT:
+			ChangeAnimLeft();
+			break;
+		}
+		vulnearble = false;
+	}
 }
 
 void Enemy::WinLose() {
@@ -114,38 +174,48 @@ EnemyAnim Enemy::GetAnimation()
 void Enemy::Stop()
 {
 	dir = { 0,0 };
-	state = State_e::IDLE;
-	SetAnimation((int)EnemyAnim::IDLE);
+	if (state != State_e::PELLET) {
+		state = State_e::IDLE;
+		SetAnimation((int)EnemyAnim::IDLE);
+	}
 }
 void Enemy::StartWalkingLeft()
 {
-	state = State_e::WALKING;
 	look = Look_e::LEFT;
-	SetAnimation((int)EnemyAnim::WALKING_LEFT);
+	if (state != State_e::PELLET) {
+		state = State_e::WALKING;
+		SetAnimation((int)EnemyAnim::WALKING_LEFT);
+	}
 }
 void Enemy::StartWalkingRight()
 {
-	state = State_e::WALKING;
 	look = Look_e::RIGHT;
-	SetAnimation((int)EnemyAnim::WALKING_RIGHT);
+	if (state != State_e::PELLET) {
+		state = State_e::WALKING;
+		SetAnimation((int)EnemyAnim::WALKING_RIGHT);
+	}
 }
 void Enemy::StartWalkingUp()
 {
-	state = State_e::WALKING;
 	look = Look_e::UP;
-	SetAnimation((int)EnemyAnim::WALKING_UP);
+	if (state != State_e::PELLET) {
+		state = State_e::WALKING;
+		SetAnimation((int)EnemyAnim::WALKING_UP);
+	}
 }
 void Enemy::StartWalkingDown()
 {
-	state = State_e::WALKING;
 	look = Look_e::DOWN;
-	SetAnimation((int)EnemyAnim::WALKING_DOWN);
+	if (state != State_e::PELLET) {
+		state = State_e::WALKING;
+		SetAnimation((int)EnemyAnim::WALKING_DOWN);
+	}
 }
 void Enemy::StartDying()
 {
-	state = State_e::DYING;
+	state = State_e::EYES;
 
-	SetAnimation((int)EnemyAnim::DYING);
+	//SetAnimation((int)EnemyAnim::PELLET);
 }
 void Enemy::ChangeAnimRight()
 {
@@ -154,6 +224,7 @@ void Enemy::ChangeAnimRight()
 	{
 	case State_e::IDLE:	 SetAnimation((int)EnemyAnim::IDLE);    break;
 	case State_e::WALKING: SetAnimation((int)EnemyAnim::WALKING_RIGHT); break;
+	case State_e::PELLET: SetAnimation((int)EnemyAnim::PELLET); break;
 	}
 }
 void Enemy::ChangeAnimLeft()
@@ -163,6 +234,7 @@ void Enemy::ChangeAnimLeft()
 	{
 	case State_e::IDLE:	 SetAnimation((int)EnemyAnim::IDLE);    break;
 	case State_e::WALKING: SetAnimation((int)EnemyAnim::WALKING_LEFT); break;
+	case State_e::PELLET: SetAnimation((int)EnemyAnim::PELLET); break;
 	}
 }
 void Enemy::ChangeAnimUp()
@@ -172,6 +244,7 @@ void Enemy::ChangeAnimUp()
 	{
 	case State_e::IDLE:	 SetAnimation((int)EnemyAnim::IDLE);    break;
 	case State_e::WALKING: SetAnimation((int)EnemyAnim::WALKING_UP); break;
+	case State_e::PELLET: SetAnimation((int)EnemyAnim::PELLET); break;
 	}
 }
 void Enemy::ChangeAnimDown()
@@ -181,6 +254,7 @@ void Enemy::ChangeAnimDown()
 	{
 	case State_e::IDLE:	 SetAnimation((int)EnemyAnim::IDLE);    break;
 	case State_e::WALKING: SetAnimation((int)EnemyAnim::WALKING_DOWN); break;
+	case State_e::PELLET: SetAnimation((int)EnemyAnim::PELLET); break;
 	}
 }
 void Enemy::Update()

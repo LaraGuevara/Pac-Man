@@ -42,6 +42,8 @@ void ResourceManager::LoadSounds()
     sounds[(int)AudioResource::AUD_SIREN3] = LoadSound("game audio/siren_3.wav");
     sounds[(int)AudioResource::AUD_SIREN4] = LoadSound("game audio/siren_4.wav");
     sounds[(int)AudioResource::AUD_SIREN5] = LoadSound("game audio/siren_5.wav");
+
+    sounds[(int)AudioResource::AUD_PELLET] = LoadSound("game audio/power_pellet.wav");
 }
 
 //Release the texture associated with the key id

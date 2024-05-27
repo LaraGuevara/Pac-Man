@@ -4,7 +4,7 @@
 #include "Entity.h"
 #include "Sprite.h"
 
-UI::UI(const Point& p, int t): Entity(p, 16*(3 * t), 16, 16*(3*t), 16)
+UI::UI(const Point& p, int t): Entity(p, (16 + (32 * t)), 16, (16 + (32 * t)), 16)
 {
 	type = t;
 }
@@ -21,14 +21,14 @@ AppStatus UI::Initialise()
 		return AppStatus::ERROR;
 	}
 
-	render = new Sprite(data.GetTexture(Resource::IMG_ITEMS));
-	if (render == nullptr)
-	{
-		LOG("Failed to allocate memory for items sprite");
-		return AppStatus::ERROR;
-	}
-
 	if (type == 1) {
+		render = new Sprite(data.GetTexture(Resource::IMG_ITEMS));
+		if (render == nullptr)
+		{
+			LOG("Failed to allocate memory for items sprite");
+			return AppStatus::ERROR;
+		}
+
 		float k = 16;
 		float n = 16 * 3;
 
@@ -50,51 +50,50 @@ AppStatus UI::Initialise()
 		sprite->SetAnimation((int)UIElements::LIVES_ICON3);
 
 	}
-	else {
-		float n = 16;
+	else if (type == 0) {
+		render = new Sprite(data.GetTexture(Resource::IMG_ITEMS));
+		if (render == nullptr)
+		{
+			LOG("Failed to allocate memory for items sprite");
+			return AppStatus::ERROR;
+		}
+		float c = 16;
 
 		Sprite* sprite = dynamic_cast<Sprite*>(render);
-		sprite->SetNumberAnimations(3);
+		sprite->SetNumberAnimations(2);
 
 		sprite->SetAnimationDelay((int)UIElements::FRUIT1, ANIM_DELAY);
-		sprite->AddKeyFrame((int)UIElements::FRUIT1, { 0, 0, n, n });
+		sprite->AddKeyFrame((int)UIElements::FRUIT1, { 0, 0, c, c });
 
 		sprite->SetAnimationDelay((int)UIElements::FRUIT2, ANIM_DELAY);
-		sprite->AddKeyFrame((int)UIElements::FRUIT2, { n, 0, n, n });
+		sprite->AddKeyFrame((int)UIElements::FRUIT2, { c, 0, c, c });
 
-		sprite->SetAnimationDelay((int)UIElements::FRUITEMPTY, ANIM_DELAY);
-		sprite->AddKeyFrame((int)UIElements::FRUITEMPTY, { 0, 4*n, n, n });
-
-		sprite->SetAnimation((int)UIElements::FRUITEMPTY);
+		sprite->SetAnimation((int)UIElements::FRUIT1);
 	}
 
 	return AppStatus::OK;
 }
 
-void UI::RenderUI(int level, bool fruit, int lives)
+void UI::RenderUI(int level, int lives)
 {
 	if (type == 1) RenderUILives(lives);
-	else RenderUIFruit(level, fruit);
+	else if (type == 0) RenderUIFruit(level);
 
 	Sprite* sprite = dynamic_cast<Sprite*>(render);
 	sprite->Update();
 }
 
-void UI::RenderUIFruit(int level, bool fruit)
+void UI::RenderUIFruit(int level)
 {
 	Sprite* sprite = dynamic_cast<Sprite*>(render);
-	if (fruit) {
-		if (level == 1) {
-			sprite->SetAnimation((int)UIElements::FRUIT1);
-		}
-		else {
-			sprite->SetAnimation((int)UIElements::FRUIT2);
-		}
+	switch (level) {
+	case 1:
+		sprite->SetAnimation((int)UIElements::FRUIT1);
+		break;
+	case 2:
+		sprite->SetAnimation((int)UIElements::FRUIT2);
+		break;
 	}
-	else {
-		sprite->SetAnimation((int)UIElements::FRUITEMPTY);
-	}
-	
 }
 
 void UI::RenderUILives(int lives) 

@@ -13,14 +13,14 @@
 #define ENEMY_SPEED			2
 
 //Logic states
-enum class State_e { IDLE, WALKING, DYING };
+enum class State_e { IDLE, WALKING, PELLET, EYES };
 enum class Look_e { RIGHT, LEFT, UP, DOWN };
 enum class EnemyType {BLINKY, PINKY, INKY, CLYDE};
 
 //Rendering states
 enum class EnemyAnim {
 	IDLE,
-	WALKING_LEFT, WALKING_RIGHT, WALKING_UP, WALKING_DOWN, DYING,
+	WALKING_LEFT, WALKING_RIGHT, WALKING_UP, WALKING_DOWN, PELLET, PELLET_FLASH,
 	 HIDDEN,
 	NUM_ANIMATIONS
 };
@@ -33,6 +33,9 @@ public:
 
 	AppStatus Initialise();
 	void SetTileMap(TileMap* tilemap);
+
+	void Intro(int count);
+	void Pellet(bool ifPellet, int count);
 
 	void Update();
 	void Release();
@@ -67,5 +70,8 @@ private:
 	EnemyType type;
 	TileMap* map;
 
-	
+	bool vulnearble = false;
+	bool flash = true;
+	int delay = 30;
+
 };

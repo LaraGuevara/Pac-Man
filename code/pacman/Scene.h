@@ -22,6 +22,10 @@ enum class UITypes { FRUIT, LIVES};
 //font color
 #define CYANBLUE CLITERAL(Color){0, 255, 255, 255}
 
+//timers
+#define PELLETTIME 480;
+#define FRUITTIME 900;
+
 class Scene
 {
 public:
@@ -62,13 +66,16 @@ private:
     std::vector<Object*> objects;
 
     //efects
-    Sound sound_intro, sound_munch1, sound_munch2;
+    Sound sound_intro, sound_munch1, sound_munch2, sound_pellet;
     //background sirem
     Sound sirens[5];
     //siren length for looping
     int siren_length = SIREN_LENGTH;
     //for changing between the sirens
     int siren = 0;
+
+    bool collectPellet = false;
+    int pellet_timer = 480;
 
     //game check
     bool EndLevel = false;
@@ -92,11 +99,7 @@ private:
     int inkyX, inkyY;
     /*int clydeX, clydeY;*/
 
-    //has fruit been collected? check
-    bool collectedFruit = false;
-
     Text* font;
-
 
     Camera2D camera;
     DebugMode debug;

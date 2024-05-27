@@ -27,6 +27,8 @@ Scene::Scene()
 	sound_munch1 = data.GetSound(AudioResource::AUD_MUNCH1);
 	sound_munch2 = data.GetSound(AudioResource::AUD_MUNCH2);
 
+	sound_pellet = data.GetSound(AudioResource::AUD_PELLET);
+
 	sirens[0] = data.GetSound(AudioResource::AUD_SIREN1);
 	sirens[1] = data.GetSound(AudioResource::AUD_SIREN2);
 	sirens[2] = data.GetSound(AudioResource::AUD_SIREN3);
@@ -107,7 +109,7 @@ AppStatus Scene::Init()
 		return AppStatus::ERROR;
 	}
 	//create UI
-	fruitUI = new UI({(WINDOW_WIDTH-50), (WINDOW_HEIGHT-10)}, (int)UITypes::FRUIT);
+	fruitUI = new UI({70, (WINDOW_HEIGHT)}, (int)UITypes::FRUIT);
 	livesUI = new UI({10, (WINDOW_HEIGHT)}, (int)UITypes::LIVES);
 
 	//Initialise player
@@ -303,7 +305,7 @@ AppStatus Scene::LoadLevel(int stage)
 			}
 			else if (tile == Tile::INKY)
 			{
-				pos.x = x * TILE_SIZE + TILE_SIZE;
+				pos.x = x * TILE_SIZE + TILE_SIZE - 5;
 				inkyX = pos.x;
 				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
 				inkyY = pos.y;
@@ -312,7 +314,7 @@ AppStatus Scene::LoadLevel(int stage)
 			}
 			else if (tile == Tile::BLINKY)
 			{
-				pos.x = x * TILE_SIZE + TILE_SIZE;
+				pos.x = x * TILE_SIZE - 2;
 				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
 				blinkyX = pos.x;
 				blinkyY = pos.y;
@@ -378,11 +380,14 @@ void Scene::Update()
 
 	if (EndLevel) {
 		StopSound(sirens[siren]);
+		if(IsSoundPlaying(sound_pellet)) StopSound(sound_pellet);
+
 		level->win = true;
 		player->Win();
 		inky->WinLose();
 		blinky->WinLose();
 		win = true;
+
 		LoadLevel(0);
 		EndLevel = false;
 	}
@@ -396,6 +401,8 @@ void Scene::Update()
 		else 
 		{
 			player->Intro(intro_count);
+			inky->Intro(intro_count);
+			blinky->Intro(intro_count);
 			--intro_count;
 		}
 	}
@@ -434,6 +441,20 @@ void Scene::Update()
 			} else PlaySound(sirens[siren]);
 		}
 
+		if (collectPellet) {
+			if (pellet_timer >= 0) {
+				if (!IsSoundPlaying(sound_pellet)) PlaySound(sound_pellet);
+				--pellet_timer;
+			}
+			else {
+				collectPellet = false;
+				pellet_timer = PELLETTIME;
+				StopSound(sound_pellet);
+			}
+			blinky->Pellet(collectPellet, pellet_timer);
+			inky->Pellet(collectPellet, pellet_timer);
+		}
+
 		level->Update();
 		player->Update();
 		inky->Update();
@@ -462,9 +483,6 @@ void Scene::Render()
 	}
 
 	RenderGUI();
-	fruitUI->DrawPlayer();
-	livesUI->DrawPlayer();
-
 	EndMode2D();
 }
 void Scene::Release()
@@ -504,6 +522,9 @@ void Scene::CheckCollisions()
 					munch1 = true;
 				}
 			}
+            else if ((*it)->Sounds() == (int)ObjectType::PELLET) {
+				collectPellet = true;
+			}
 
 			//Delete the object
 			delete* it;
@@ -527,10 +548,14 @@ void Scene::CheckCollisions()
 
 	if (!god_mode) {
 		enemy_box = inky->GetHitbox();
-		if (player_box.TestAABB(enemy_box)) lose = true;
+		if (player_box.TestAABB(enemy_box)) {
+			if(!collectPellet) lose = true;
+		}
 		else {
 			enemy_box = blinky->GetHitbox();
-			if (player_box.TestAABB(enemy_box)) lose = true;
+			if (player_box.TestAABB(enemy_box)) {
+				if (!collectPellet) lose = true;
+			}
 		}
 	}
 	
@@ -562,8 +587,10 @@ void Scene::RenderGUI() const
 	font->Draw(10, 5, TextFormat("1UP"));
 	font->Draw(10, 13, TextFormat("%d", player->GetScore()));
 	
-	fruitUI->RenderUI(level_count, collectedFruit, player->GetLives());
-	livesUI->RenderUI(level_count, collectedFruit, player->GetLives());
+	fruitUI->RenderUI(level_count, player->GetLives());
+	livesUI->RenderUI(level_count, player->GetLives());
+	livesUI->DrawPlayer();
+	fruitUI->DrawPlayer();
 
 	if (intro) font->Draw((WINDOW_WIDTH / 2)-22, (WINDOW_HEIGHT / 2)+15, TextFormat("READY!"), YELLOW);
 	if (intro_count > 60) font->Draw((WINDOW_WIDTH / 2) - 40, (WINDOW_HEIGHT / 2) - 32, TextFormat("PLAYER ONE"), CYANBLUE);

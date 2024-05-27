@@ -83,5 +83,6 @@ private:
 	int score;
 	int lives = 3;
 	int count = 0;
+	bool pellet = false;
 	Sound sound_death;
 };

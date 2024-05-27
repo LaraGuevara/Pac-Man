@@ -4,7 +4,7 @@
 #include "Entity.h"
 
 enum class UIElements {
-	LIVES_ICON1, LIVES_ICON2, LIVES_ICON3, LIVES_ICONNONE, ICON_NUM, FRUIT1, FRUIT2, FRUITEMPTY
+	LIVES_ICON1, LIVES_ICON2, LIVES_ICON3, LIVES_ICONNONE, ICON_NUM, FRUIT1, FRUIT2
 };
 
 class UI : public Entity {
@@ -13,8 +13,8 @@ public:
 	~UI();
 
 	AppStatus Initialise();
-	void RenderUI(int level, bool fruit, int lives);
-	void RenderUIFruit(int level, bool fruit);
+	void RenderUI(int level, int lives);
+	void RenderUIFruit(int level);
 	void RenderUILives(int lives);
 	void Release();
 
