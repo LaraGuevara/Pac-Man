@@ -11,7 +11,8 @@ Scene::Scene()
 
     level = nullptr;
 
-
+	fruitUI = nullptr;
+	livesUI = nullptr;
 	
 	camera.target = { 0, 0 };				//Center of the screen
 	camera.offset = { 0, 0 };	//Offset from the target (center of the screen)
@@ -59,6 +60,16 @@ Scene::~Scene()
         delete level;
         level = nullptr;
     }
+	if (fruitUI != nullptr) {
+		fruitUI->Release();
+		delete fruitUI;
+		fruitUI = nullptr;
+	}
+	if (livesUI != nullptr) {
+		livesUI->Release();
+		delete livesUI;
+		livesUI = nullptr;
+	}
 	for (Entity* obj : objects)
 	{
 		delete obj;
@@ -89,6 +100,10 @@ AppStatus Scene::Init()
 		LOG("Failed to allocate memory for enemy");
 		return AppStatus::ERROR;
 	}
+	//create UI
+	fruitUI = new UI({(WINDOW_WIDTH-50), (WINDOW_HEIGHT-10)}, (int)UITypes::FRUIT);
+	livesUI = new UI({10, (WINDOW_HEIGHT)}, (int)UITypes::LIVES);
+
 	//Initialise player
 	if (player->Initialise() != AppStatus::OK)
 	{
@@ -107,6 +122,17 @@ AppStatus Scene::Init()
 		LOG("Failed to initialise Player");
 		return AppStatus::ERROR;
 	}
+	//initialize UI
+	
+	if (fruitUI->Initialise() != AppStatus::OK) {
+		LOG("Failed to initialise fruit UI");
+		return AppStatus::ERROR;
+	}
+	if (livesUI->Initialise() != AppStatus::OK) {
+		LOG("Failed to initialise lives UI");
+		return AppStatus::ERROR;
+	}
+
 	//Create level 
     level = new TileMap();
     if (level == nullptr)
@@ -346,7 +372,10 @@ void Scene::Update()
 
 	if (intro) 
 	{
-		if (intro_count <= 0) intro = false;
+		if (intro_count <= 0) {
+			intro = false;
+			player->setLives(2);
+		}
 		else 
 		{
 			player->Intro(intro_count);
@@ -370,7 +399,7 @@ void Scene::Update()
 		player->Lose();
 		if (!player->lose) {
 			lose = false;
-			if (player->GetLives() > 0) {
+			if (player->GetLives() >= 0) {
 				player->SetPos({ playerX, playerY });
 				inky->SetPos({ inkyX, inkyY });
 				blinky->SetPos({ blinkyX, blinkyY });
@@ -415,9 +444,11 @@ void Scene::Render()
 		blinky->DrawDebug(GREEN);
 	}
 
-	EndMode2D();
-
 	RenderGUI();
+	fruitUI->DrawPlayer();
+	livesUI->DrawPlayer();
+
+	EndMode2D();
 }
 void Scene::Release()
 {
@@ -425,6 +456,8 @@ void Scene::Release()
 	player->Release();
 	inky->Release();
 	blinky->Release();
+	fruitUI->Release();
+	livesUI->Release();
 	ClearLevel();
 }
 void Scene::CheckCollisions()
@@ -511,7 +544,9 @@ void Scene::RenderGUI() const
 {
 	//Temporal approach
 	DrawText(TextFormat("SCORE : %d", player->GetScore()), 10, 10, 8, LIGHTGRAY);
-	DrawText(TextFormat("LIVES : %d", player->GetLives()), 10, WINDOW_HEIGHT-10, 8, LIGHTGRAY);
-	DrawText(TextFormat("LEVEL : %d", level_count), WINDOW_WIDTH-50, WINDOW_HEIGHT - 10, 8, LIGHTGRAY);
+	
+	fruitUI->RenderUI(level_count, collectedFruit, player->GetLives());
+	livesUI->RenderUI(level_count, collectedFruit, player->GetLives());
+
 	if(god_mode) DrawText(TextFormat("GOD MODE ACTIVE"), WINDOW_WIDTH - 100, 10, 8, LIGHTGRAY);
 }

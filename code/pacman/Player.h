@@ -38,6 +38,7 @@ public:
 	int GetScore();
 	void LoseLives();
 	int GetLives();
+	void setLives(int l);
 
 	void Update();
 	void DrawDebug(const Color& col) const;

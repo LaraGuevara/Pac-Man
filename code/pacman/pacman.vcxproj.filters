@@ -64,7 +64,7 @@
       <Filter>Entities</Filter>
     </ClInclude>
     <ClInclude Include="UI.h">
-      <Filter>Core</Filter>
+      <Filter>Render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -111,7 +111,7 @@
       <Filter>Entities</Filter>
     </ClCompile>
     <ClCompile Include="UI.cpp">
-      <Filter>Core</Filter>
+      <Filter>Render</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

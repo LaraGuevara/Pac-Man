@@ -100,6 +100,10 @@ int Player::GetLives()
 {
 	return lives;
 }
+void Player::setLives(int l) 
+{
+	lives = l;
+}
 void Player::LoseLives() 
 {
 	--lives;

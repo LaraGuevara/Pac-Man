@@ -7,6 +7,7 @@
 #include "UI.h"
 
 enum class DebugMode { OFF, SPRITES_AND_HITBOXES, ONLY_HITBOXES, SIZE };
+enum class UITypes { FRUIT, LIVES};
 
 //total amount of created levels
 #define LEVELS 2
@@ -49,6 +50,10 @@ private:
     //Enemy* clyde;
     //Enemy* pinky;
 
+    //UI
+    UI* fruitUI;
+    UI* livesUI;
+
     TileMap* level;
     std::vector<Object*> objects;
 
@@ -83,6 +88,8 @@ private:
     int inkyX, inkyY;
     /*int clydeX, clydeY;*/
 
+    //has fruit been collected? check
+    bool collectedFruit = false;
 
 
     Camera2D camera;

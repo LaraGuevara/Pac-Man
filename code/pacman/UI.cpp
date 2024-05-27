@@ -4,10 +4,10 @@
 #include "Entity.h"
 #include "Sprite.h"
 
-//UI::UI(Point p, int t): Entity(p, 16, 16)
-//{
-//	type = t;
-//}
+UI::UI(const Point& p, int t): Entity(p, 16*(3 * t), 16, 16*(3*t), 16)
+{
+	type = t;
+}
 
 UI::~UI() {
 	Release();
@@ -16,7 +16,7 @@ UI::~UI() {
 AppStatus UI::Initialise() 
 {
 	ResourceManager& data = ResourceManager::Instance();
-	if (data.LoadTexture(Resource::IMG_ITEMS, "game_sprites/Arcade - Pac-Man - General Sprites-rewards.png") != AppStatus::OK)
+	if (data.LoadTexture(Resource::IMG_ITEMS, "game_sprites/Arcade - Pac-Man - object Sprites.png") != AppStatus::OK)
 	{
 		return AppStatus::ERROR;
 	}
@@ -36,47 +36,65 @@ AppStatus UI::Initialise()
 		sprite->SetNumberAnimations((int)UIElements::ICON_NUM);
 
 		sprite->SetAnimationDelay((int)UIElements::LIVES_ICON1, ANIM_DELAY);
-		sprite->AddKeyFrame((int)UIElements::LIVES_ICON1, { 0, 3*k, n, n });
+		sprite->AddKeyFrame((int)UIElements::LIVES_ICON1, { 0, 3*k, n, k });
 
 		sprite->SetAnimationDelay((int)UIElements::LIVES_ICON2, ANIM_DELAY);
-		sprite->AddKeyFrame((int)UIElements::LIVES_ICON2, { 0, 2*k, n, n });
+		sprite->AddKeyFrame((int)UIElements::LIVES_ICON2, { 0, 2*k, n, k });
 
 		sprite->SetAnimationDelay((int)UIElements::LIVES_ICON3, ANIM_DELAY);
-		sprite->AddKeyFrame((int)UIElements::LIVES_ICON3, { 0, k, n, n });
+		sprite->AddKeyFrame((int)UIElements::LIVES_ICON3, { 0, k, n, k });
+
+		sprite->SetAnimationDelay((int)UIElements::LIVES_ICONNONE, ANIM_DELAY);
+		sprite->AddKeyFrame((int)UIElements::LIVES_ICONNONE, { k, 3*k, n, k });
+
+		sprite->SetAnimation((int)UIElements::LIVES_ICON3);
 
 	}
 	else {
 		float n = 16;
 
 		Sprite* sprite = dynamic_cast<Sprite*>(render);
-		sprite->SetNumberAnimations((int)UIElements::FRUIT_NUM);
+		sprite->SetNumberAnimations(3);
 
 		sprite->SetAnimationDelay((int)UIElements::FRUIT1, ANIM_DELAY);
 		sprite->AddKeyFrame((int)UIElements::FRUIT1, { 0, 0, n, n });
 
 		sprite->SetAnimationDelay((int)UIElements::FRUIT2, ANIM_DELAY);
 		sprite->AddKeyFrame((int)UIElements::FRUIT2, { n, 0, n, n });
+
+		sprite->SetAnimationDelay((int)UIElements::FRUITEMPTY, ANIM_DELAY);
+		sprite->AddKeyFrame((int)UIElements::FRUITEMPTY, { 0, 4*n, n, n });
+
+		sprite->SetAnimation((int)UIElements::FRUITEMPTY);
 	}
+
+	return AppStatus::OK;
 }
 
 void UI::RenderUI(int level, bool fruit, int lives)
 {
 	if (type == 1) RenderUILives(lives);
 	else RenderUIFruit(level, fruit);
+
+	Sprite* sprite = dynamic_cast<Sprite*>(render);
+	sprite->Update();
 }
 
 void UI::RenderUIFruit(int level, bool fruit)
 {
+	Sprite* sprite = dynamic_cast<Sprite*>(render);
 	if (fruit) {
-		Sprite* sprite = dynamic_cast<Sprite*>(render);
 		if (level == 1) {
 			sprite->SetAnimation((int)UIElements::FRUIT1);
 		}
 		else {
 			sprite->SetAnimation((int)UIElements::FRUIT2);
 		}
-		sprite->Update();
 	}
+	else {
+		sprite->SetAnimation((int)UIElements::FRUITEMPTY);
+	}
+	
 }
 
 void UI::RenderUILives(int lives) 
@@ -92,8 +110,9 @@ void UI::RenderUILives(int lives)
 	case 3:
 		sprite->SetAnimation((int)UIElements::LIVES_ICON3);
 		break;
+	default:
+		sprite->SetAnimation((int)UIElements::LIVES_ICONNONE);
 	}
-	sprite->Update();
 }
 
 void UI::Release() 
