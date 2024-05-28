@@ -122,12 +122,12 @@ AppStatus Scene::Init()
 
 	if (inky->Initialise() != AppStatus::OK)
 	{
-		LOG("Failed to initialise Player");
+		LOG("Failed to initialise Enemy");
 		return AppStatus::ERROR;
 	}
 	if (blinky->Initialise() != AppStatus::OK)
 	{
-		LOG("Failed to initialise Player");
+		LOG("Failed to initialise Enemy");
 		return AppStatus::ERROR;
 	}
 	//initialize UI

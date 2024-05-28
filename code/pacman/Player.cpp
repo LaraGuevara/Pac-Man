@@ -84,6 +84,27 @@ AppStatus Player::Initialise()
 
 	return AppStatus::OK;
 }
+bool Player::IntroUpdate(bool turn) 
+{
+	bool end = false;
+	if (turn) {
+		pos.x += PLAYER_SPEED;
+		if (state == State::IDLE) StartWalkingRight();
+		else {
+			if (!IsLookingRight()) ChangeAnimRight();
+		}
+	}
+	else {
+		pos.x += -PLAYER_SPEED;
+		if (state == State::IDLE) StartWalkingLeft();
+		else {
+			if (!IsLookingLeft()) ChangeAnimLeft();
+		}
+	}
+
+	if (pos.x == WINDOW_WIDTH) end = true;
+	return end;
+}
 void Player::InitScore()
 {
 	score = 0;

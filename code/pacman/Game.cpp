@@ -7,7 +7,13 @@ Game::Game()
 {
     state = GameState::MENU;
     scene = nullptr;
+    intro = nullptr;
     img_menu = nullptr;
+    img_menu_empty = nullptr;
+    img_menu_blinky = nullptr;
+    img_menu_pinky = nullptr;
+    img_menu_inky = nullptr;
+    img_menu_clyde = nullptr;
     menu1 = nullptr;
 
     target = {};
@@ -21,6 +27,12 @@ Game::~Game()
         scene->Release();
         delete scene;
         scene = nullptr;
+    }
+    if (intro != nullptr)
+    {
+        intro->Release();
+        delete intro;
+        intro = nullptr;
     }
 }
 AppStatus Game::Initialise(float scale)
@@ -67,6 +79,36 @@ AppStatus Game::LoadResources()
     }
     img_menu = data.GetTexture(Resource::IMG_MENU);
 
+    if (data.LoadTexture(Resource::IMG_MENU_EMPTY, "Menus/homescreenempty.png") != AppStatus::OK)
+    {
+        return AppStatus::ERROR;
+    }
+    img_menu_empty = data.GetTexture(Resource::IMG_MENU_EMPTY);
+
+    if (data.LoadTexture(Resource::IMG_MENU_CLYDE, "Menus/homescreenclyde.png") != AppStatus::OK)
+    {
+        return AppStatus::ERROR;
+    }
+    img_menu_clyde = data.GetTexture(Resource::IMG_MENU_CLYDE);
+
+    if (data.LoadTexture(Resource::IMG_MENU_BLINKY, "Menus/homescreenblinky.png") != AppStatus::OK)
+    {
+        return AppStatus::ERROR;
+    }
+    img_menu_blinky = data.GetTexture(Resource::IMG_MENU_BLINKY);
+
+    if (data.LoadTexture(Resource::IMG_MENU_PINKY, "Menus/homescreenpinky.png") != AppStatus::OK)
+    {
+        return AppStatus::ERROR;
+    }
+    img_menu_pinky = data.GetTexture(Resource::IMG_MENU_PINKY);
+
+    if (data.LoadTexture(Resource::IMG_MENU_INKY, "Menus/homescreeninky.png") != AppStatus::OK)
+    {
+        return AppStatus::ERROR;
+    }
+    img_menu_inky = data.GetTexture(Resource::IMG_MENU_INKY);
+
 
     //----------------------------------------------------------
     
@@ -75,10 +117,6 @@ AppStatus Game::LoadResources()
         return AppStatus::ERROR;
     }
     menu1 = data.GetTexture(Resource::IMG_MENU1);
-
-    
-    
-
 
     return AppStatus::OK;
 }
@@ -98,11 +136,33 @@ AppStatus Game::BeginPlay()
 
     return AppStatus::OK;
 }
+AppStatus Game::BeginIntro()
+{
+    intro = new Intro();
+    if (intro == nullptr)
+    {
+        LOG("Failed to allocate memory for intro");
+        return AppStatus::ERROR;
+    }
+    if (intro->Init() != AppStatus::OK)
+    {
+        LOG("Failed to initialise intro");
+        return AppStatus::ERROR;
+    }
+
+    return AppStatus::OK;
+}
 void Game::FinishPlay()
 {
     scene->Release();
     delete scene;
     scene = nullptr;
+}
+void Game::FinishIntro()
+{
+    intro->Release();
+    delete intro;
+    intro = nullptr;
 }
 AppStatus Game::Update()
 {
@@ -116,7 +176,7 @@ AppStatus Game::Update()
      if (IsKeyPressed(KEY_ESCAPE)) return AppStatus::QUIT;
      if(IsKeyPressed(KEY_SPACE))
      {
-         
+         if(BeginIntro() != AppStatus::OK) return AppStatus::ERROR;
          state = GameState::MAIN_MENU;
      }
      break;
@@ -126,16 +186,24 @@ AppStatus Game::Update()
 
         if (IsKeyPressed(KEY_ESCAPE))
         {
+            FinishIntro();
+            counter = 0;
             state = GameState::MENU;
         }
-        
-        
-        
-        if (IsKeyPressed(KEY_SPACE))
+        else if (IsKeyPressed(KEY_SPACE))
         {
+            FinishIntro();
+            counter = 0;
             if (BeginPlay() != AppStatus::OK) return AppStatus::ERROR;
             scene->intro = true;
             state = GameState::PLAYING;
+        }
+        else {
+            if (counter >= 840) {
+                intro->Update();
+                if (intro->loopCheck) counter = 0;
+            }
+            counter++;
         }
         break;
 
@@ -143,6 +211,7 @@ AppStatus Game::Update()
         if (IsKeyPressed(KEY_ESCAPE) || scene->EndGame)
         {
             FinishPlay();
+            if (BeginIntro() != AppStatus::OK) return AppStatus::ERROR;
             state = GameState::MAIN_MENU;
         }
         else
@@ -168,7 +237,36 @@ void Game::Render()
         break;
 
     case GameState::MAIN_MENU:
-        DrawTexture(*img_menu, 0, 0, WHITE);
+        if (counter <= 60) {
+            DrawTexture(*img_menu_empty, 0, 0, WHITE);
+        }
+        else if (counter <= 240) {
+            DrawTexture(*img_menu_blinky, 0, 0, WHITE);
+            if (counter <= 120) DrawRectangle(7 * TILE_SIZE, 7 * TILE_SIZE, 20 * TILE_SIZE, 2 * TILE_SIZE, BLACK);
+            else if (counter <= 180) DrawRectangle(18 * TILE_SIZE, 7 * TILE_SIZE, 10 * TILE_SIZE, 2 * TILE_SIZE, BLACK);
+        }
+        else if (counter <= 420) {
+            DrawTexture(*img_menu_pinky, 0, 0, WHITE);
+            if (counter <= 300) DrawRectangle(7 * TILE_SIZE, 9 * TILE_SIZE, 20 * TILE_SIZE, 2 * TILE_SIZE, BLACK);
+            else if (counter <= 360) DrawRectangle(18 * TILE_SIZE, 9 * TILE_SIZE, 10 * TILE_SIZE, 2 * TILE_SIZE, BLACK);
+        }
+        else if (counter <= 600) {
+            DrawTexture(*img_menu_inky, 0, 0, WHITE);
+            if (counter <= 480) DrawRectangle(7 * TILE_SIZE, 13 * TILE_SIZE, 20 * TILE_SIZE, 2 * TILE_SIZE, BLACK);
+            else if (counter <= 540) DrawRectangle(18 * TILE_SIZE, 13 * TILE_SIZE, 10 * TILE_SIZE, 2 * TILE_SIZE, BLACK);
+        }
+        else if (counter <= 780) {
+            DrawTexture(*img_menu_clyde, 0, 0, WHITE);
+            if (counter <= 660) DrawRectangle(7 * TILE_SIZE, 15 * TILE_SIZE, 20 * TILE_SIZE, 2 * TILE_SIZE, BLACK);
+            else if (counter <= 720) DrawRectangle(18 * TILE_SIZE, 15 * TILE_SIZE, 10 * TILE_SIZE, 2 * TILE_SIZE, BLACK);
+        }
+        else {
+            DrawTexture(*img_menu, 0, 0, WHITE);
+            if (counter == 840) intro->loopCheck = false;
+            if (counter >= 840) {
+                intro->Render();
+            }
+        }
         break;
 
     case GameState::PLAYING:
@@ -192,6 +290,11 @@ void Game::UnloadResources()
 {
     ResourceManager& data = ResourceManager::Instance();
     data.ReleaseTexture(Resource::IMG_MENU);
+    data.ReleaseTexture(Resource::IMG_MENU_BLINKY);
+    data.ReleaseTexture(Resource::IMG_MENU_PINKY);
+    data.ReleaseTexture(Resource::IMG_MENU_INKY);
+    data.ReleaseTexture(Resource::IMG_MENU_CLYDE);
+    data.ReleaseTexture(Resource::IMG_MENU_EMPTY);
     data.ReleaseTexture(Resource::IMG_MENU1);
 
     UnloadRenderTexture(target);

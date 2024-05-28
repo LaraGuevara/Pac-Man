@@ -92,6 +92,42 @@ AppStatus Enemy::Initialise()
 	return AppStatus::OK;
 }
 
+void Enemy::IntroUpdate(bool turn) 
+{
+	Sprite* sprite = dynamic_cast<Sprite*>(render);
+	if (turn) {
+		pos.x += (ENEMY_SPEED - 1);
+		if (state != State_e::PELLET) {
+			state = State_e::PELLET;
+			SetAnimation((int)EnemyAnim::PELLET);
+		}
+
+		if (introCaught) {
+			SetAnimation((int)EnemyAnim::HIDDEN);
+			state = State_e::WALKING;
+		}
+		else {
+			if (state == State_e::IDLE) StartWalkingRight();
+			else {
+				if (!IsLookingRight()) ChangeAnimRight();
+			}
+		}
+	}
+	else {
+		pos.x += -ENEMY_SPEED;
+		if (state == State_e::IDLE) StartWalkingLeft();
+		else {
+			if (!IsLookingLeft()) ChangeAnimLeft();
+		}
+	}
+}
+
+void Enemy::UpdateLook(int anim_id)
+{
+	EnemyAnim anim = (EnemyAnim)anim_id;
+	look = (anim == EnemyAnim::WALKING_LEFT) ? Look_e::LEFT : Look_e::RIGHT;
+}
+
 void Enemy::Intro(int count) {
 	if (count <= 60) SetAnimation((int)EnemyAnim::IDLE);
 	else SetAnimation((int)EnemyAnim::HIDDEN);

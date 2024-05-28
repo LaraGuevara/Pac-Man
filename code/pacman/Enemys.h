@@ -25,6 +25,12 @@ enum class EnemyAnim {
 	NUM_ANIMATIONS
 };
 
+struct Step {
+	Point speed;
+	int frames;
+	int anim;
+};
+
 class Enemy : public Entity
 {
 public:
@@ -41,6 +47,9 @@ public:
 	void Release();
 	void DrawDebug(const Color& col) const;
 	void WinLose();
+
+	bool introCaught = false;
+	void IntroUpdate(bool turn);
 
 private:
 	bool IsLookingRight() const;
@@ -64,6 +73,12 @@ private:
 	void ChangeAnimLeft();
 	void ChangeAnimUp();
 	void ChangeAnimDown();
+
+	void IntroPatternInit();
+	void UpdateLook(int anim_id);
+	int current_step;
+	int current_frames;
+	std::vector<Step> pattern;
 
 	State_e state;
 	Look_e look;

@@ -153,6 +153,7 @@
     <ClInclude Include="Entity.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Globals.h" />
+    <ClInclude Include="Intro.h" />
     <ClInclude Include="MemLeaks.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="Player.h" />
@@ -172,6 +173,7 @@
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Globals.cpp" />
+    <ClCompile Include="Intro.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="Player.cpp" />

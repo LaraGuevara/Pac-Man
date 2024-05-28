@@ -50,6 +50,9 @@ public:
 
 	bool lose = false;
 
+	bool introCaught = false;
+	bool IntroUpdate(bool turn);
+
 private:
 	bool IsLookingRight() const;
 	bool IsLookingLeft() const;

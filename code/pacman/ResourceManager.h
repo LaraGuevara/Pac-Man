@@ -8,6 +8,11 @@
 enum class Resource {
     IMG_MENU1,
     IMG_MENU,
+    IMG_MENU_BLINKY,
+    IMG_MENU_INKY,
+    IMG_MENU_PINKY,
+    IMG_MENU_CLYDE,
+    IMG_MENU_EMPTY,
     IMG_PLAYER,
     IMG_TILES,
     IMG_TILES_WHITE,
