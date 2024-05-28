@@ -255,7 +255,7 @@ AppStatus Scene::LoadLevel(int stage)
 			-3,  0,  0,  0,  0,  0, 50,  0,  0,  0,  3,  0,  0, 0,  0,  0,  0,  4,  0,  0,  0, 50,  0,  0,  0,  0,  0, -2,
 			13, 13, 13, 13, 13, 23, 50, 35, 36,  0,  3,  0,  0,  0,  0,  0,  0,  4,  0, 35, 36, 50, 24, 13, 13, 13, 13, 13,
 			 0,  0,  0,  0,  0,  4, 50, 25, 26,  0, 32, 11, 11, 11, 11, 11, 11, 31,  0, 25, 26, 50,  3,  0,  0,  0,  0, 0,
-			 0,  0,  0,  0,  0,  4, 50, 25, 26,  0,  0,  0,  0, 0,  0,  0,  0,  0,  101, 25, 26, 50,  3,  0,  0,  0,  0, 0,
+			 0,  0,  0,  0,  0,  4, 50, 25, 26,  0,  0,  0,  0, 53,  0,  0,  0,  0,  101, 25, 26, 50,  3,  0,  0,  0,  0, 0,
 			 0,  0,  0,  0,  0,  4, 50, 25, 26,  0, 40, 15, 15, 15, 15, 15, 15, 39,  0, 25, 26, 50,  3,  0,  0,  0,  0, 0,
 			 2, 11, 11, 11, 11, 27, 50, 37, 38,  0, 28, 21, 21, 36, 35, 21, 21, 27,  0, 37, 38, 50, 28, 11, 11, 11, 11, 1,
 			 4, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 25, 26, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 3,
@@ -275,6 +275,7 @@ AppStatus Scene::LoadLevel(int stage)
 
 		if(stage == 1) player->InitScore();
 		siren = 0;
+		fruitcounter = FRUITTIME;
 	}
 	else
 	{
@@ -337,6 +338,14 @@ AppStatus Scene::LoadLevel(int stage)
 				objects.push_back(obj);
 				map[i] = 0;
 			}
+			else if (tile == Tile::FRUIT)
+			{
+				pos.x = x * TILE_SIZE + TILE_SIZE / 2;
+				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
+				fruitX = pos.x;
+				fruitY = pos.y;
+				map[i] = 0;
+			}
 			++i;
 		}
 	}
@@ -360,6 +369,20 @@ void Scene::Update()
 	//insta win/lose
 	if (IsKeyPressed(KEY_F2))       EndLevel = true;
 	if (IsKeyPressed(KEY_F3))       lose = true;
+	if (IsKeyPressed(KEY_F5)) {
+		int objectX, objectY;
+		bool checkTile = true;
+		while (checkTile) {
+			objectX = GetRandomValue(7, LEVEL_WIDTH-7)*TILE_SIZE;
+			objectY = GetRandomValue(7, LEVEL_HEIGHT-7) * TILE_SIZE;
+			AABB box({ objectX, objectY }, TILE_SIZE, TILE_SIZE);
+			if (!level->SolidTest(box)) checkTile = false;
+		}
+		objectX = objectX + TILE_SIZE/2;
+		objectY = objectY + TILE_SIZE*2 - 2.15;
+		Object* obj = new Object({objectX, objectY}, level_count);
+		objects.push_back(obj);
+	}
 
 
 	//godmode
@@ -391,6 +414,12 @@ void Scene::Update()
 		LoadLevel(0);
 		EndLevel = false;
 	}
+
+	if (fruitcounter == 0) {
+		Object* obj = new Object({ fruitX, fruitY }, level_count);
+		objects.push_back(obj);
+	}
+	fruitcounter--;
 
 	if (intro) 
 	{

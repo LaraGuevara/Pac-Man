@@ -37,12 +37,16 @@ Game::~Game()
 }
 AppStatus Game::Initialise(float scale)
 {
-    float w, h;
+    float w, h, w2, h2;
     w = WINDOW_WIDTH * scale;
     h = WINDOW_HEIGHT * scale;
 
     //Initialise window
     InitWindow((int)w, (int)h, "Pac-Man");
+
+    int monitor = GetCurrentMonitor();
+    w2 = (float)GetMonitorWidth(monitor);
+    h2 = (float)GetMonitorHeight(monitor);
 
     //Render texture initialisation, used to hold the rendering result so we can easily resize it
     target = LoadRenderTexture(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -53,7 +57,7 @@ AppStatus Game::Initialise(float scale)
     }
     SetTextureFilter(target.texture, TEXTURE_FILTER_POINT);
     src = { 0, 0, WINDOW_WIDTH, -WINDOW_HEIGHT };
-    dst = { 0, 0, w, h };
+    dst = { w2/2 - w/2, h2/2 - h/2, w, h };
 
     //Load resources
     if (LoadResources() != AppStatus::OK)
@@ -66,6 +70,9 @@ AppStatus Game::Initialise(float scale)
     SetTargetFPS(60);
     //Disable the escape key to quit functionality
     SetExitKey(0);
+
+    SetWindowSize(w2, h2);
+    ToggleFullscreen();
 
     return AppStatus::OK;
 }

@@ -33,7 +33,7 @@ enum class Tile {
 	TOPCORNERWALL_L, TOPCORNERWALL_R,
 
 	// 50 <= id < 100: special tiles
-	DOT = 50, LARGE_DOT, PELLET,
+	DOT = 50, LARGE_DOT, PELLET, FRUIT,
 
 	//Intervals
 	STATIC_FIRST = DOUBLECORNER_TR,
@@ -72,6 +72,7 @@ public:
 	bool TestCollisionWallDown(const AABB& box) const;
 
 	Tile TestSideExit(const AABB& box) const;
+	bool SolidTest(const AABB& box) const;
 
 	bool win = false;
 	bool lose = false;

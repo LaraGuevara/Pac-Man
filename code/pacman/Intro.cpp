@@ -10,7 +10,6 @@ Intro::Intro()
 	Inky = nullptr;
 	Clyde = nullptr;
 	Dot = nullptr;
-	font = nullptr;
 	introScene = nullptr;
 
 	camera.target = { 0, 0 };				
@@ -46,12 +45,14 @@ Intro::~Intro()
 		delete Clyde;
 		Clyde = nullptr;
 	}
-	if (font != nullptr) {
-		delete font;
-		font = nullptr;
-	}
 	if (Dot != nullptr) {
+		delete Dot;
 		Dot = nullptr;
+	}
+	if (introScene != nullptr) {
+		introScene->Release();
+		delete introScene;
+		introScene = nullptr;
 	}
 }
 
@@ -132,17 +133,6 @@ AppStatus Intro::Init()
 	}
 	
 	PacMan->SetTileMap(introScene);
-
-	font = new Text();
-	if (font == nullptr) {
-		LOG("Failed to allocate memory for font");
-		return AppStatus::ERROR;
-	}
-	if (font->Initialise(Resource::IMG_FONT, "game_sprites/Arcade - Pac-Man - font.png", ' ', 8) != AppStatus::OK)
-	{
-		LOG("Failed to initialise Level");
-		return AppStatus::ERROR;
-	}
 
 	return AppStatus::OK;
 }

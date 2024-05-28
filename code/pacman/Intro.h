@@ -45,7 +45,6 @@ private:
 	Object* Dot;
 
 	Camera2D camera;
-	Text* font;
 	TileMap* introScene;
 	int playerX, playerY;
 	int dotX, dotY;

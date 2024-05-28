@@ -19,6 +19,29 @@ Object::Object(const Point& p, ObjectType t) : Entity(p, OBJECT_PHYSICAL_SIZE, O
 	ResourceManager& data = ResourceManager::Instance();
 	render = new StaticImage(data.GetTexture(Resource::IMG_TILES), rc);
 }
+Object::Object(const Point& p, int fruit) : Entity(p, OBJECT_PHYSICAL_SIZE, OBJECT_PHYSICAL_SIZE, OBJECT_FRAME_SIZE * 2, OBJECT_FRAME_SIZE * 2)
+{
+
+	Rectangle rc;
+	const int n = 16;
+	const int c = 8 + 1;
+	switch (fruit)
+	{
+	case 1: 
+		rc = { 0, 3 * c, n, n }; 
+		type = ObjectType::CHERRY;
+		break;
+	case 2: 
+		rc = { n, 3 * c, n, n }; 
+		type = ObjectType::STRAWBERRY;
+		break;
+
+	default: LOG("Internal error: object creation of invalid type");
+	}
+
+	ResourceManager& data = ResourceManager::Instance();
+	render = new StaticImage(data.GetTexture(Resource::IMG_TILES), rc);
+}
 Object::~Object()
 {
 }
@@ -30,6 +53,8 @@ int Object::Points() const
 {
 	if (type == ObjectType::DOT)		return POINTS_DOT;
 	else if (type == ObjectType::PELLET)	return POINTS_PELLET;
+	else if (type == ObjectType::CHERRY)    return POINTS_CHERRY;
+	else if (type == ObjectType::STRAWBERRY) return POINTS_STRAWBERRY;
 	else
 	{
 		LOG("Internal error: object type invalid when giving points");
@@ -40,6 +65,8 @@ int Object::Sounds()
 {
 	if (type == ObjectType::DOT)		return (int)ObjectType::DOT;
 	else if (type == ObjectType::PELLET)	return (int)ObjectType::PELLET;
+	else if (type == ObjectType::CHERRY)    return (int)ObjectType::CHERRY;
+	else if (type == ObjectType::STRAWBERRY) return (int)ObjectType::STRAWBERRY;
 	else
 	{
 		LOG("Internal error: object type invalid when giving points");

@@ -149,6 +149,10 @@ Tile TileMap::TestSideExit(const AABB& box) const
 {
 	return GetTileIndex(box.pos.x, box.pos.y);
 }
+bool TileMap::SolidTest(const AABB& box) const
+{
+	return IsTileSolid(GetTileIndex(box.pos.x, box.pos.y));
+}
 bool TileMap::CollisionX(const Point& p, int distance) const
 {
 	int x, y, y0, y1;

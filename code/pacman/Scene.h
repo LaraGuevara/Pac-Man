@@ -98,6 +98,8 @@ private:
     /*int pinkyX, pinkyY;*/
     int inkyX, inkyY;
     /*int clydeX, clydeY;*/
+    int fruitX, fruitY;
+    int fruitcounter = FRUITTIME;
 
     Text* font;
 
