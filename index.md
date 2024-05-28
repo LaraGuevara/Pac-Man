@@ -29,7 +29,7 @@ General controls:
 
 # Pixel Pioneers - Our team
 
-![](frozenSlothStudios_team.JPG)
+![image0](https://github.com/LaraGuevara/Pac-Man/assets/159762558/f1c4f22b-3154-45c0-a534-13f8a102a9e9)
 
 ## Team members
 
