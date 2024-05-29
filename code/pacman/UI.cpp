@@ -15,7 +15,7 @@ UI::~UI() {
 AppStatus UI::Initialise() 
 {
 	ResourceManager& data = ResourceManager::Instance();
-	if (data.LoadTexture(Resource::IMG_ITEMS, "game_sprites/Arcade - Pac-Man - object Sprites.png") != AppStatus::OK)
+	if (data.LoadTexture(Resource::IMG_ITEMS, "Resources/game_sprites/Arcade - Pac-Man - object Sprites.png") != AppStatus::OK)
 	{
 		return AppStatus::ERROR;
 	}

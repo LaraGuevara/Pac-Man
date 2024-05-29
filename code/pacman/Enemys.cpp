@@ -36,7 +36,7 @@ AppStatus Enemy::Initialise()
 	}
 
 	ResourceManager& data = ResourceManager::Instance();
-	if (data.LoadTexture(Resource::IMG_ENEMY, "game_sprites/Arcade - Pac-Man - General Sprites-allghosts.png") != AppStatus::OK)
+	if (data.LoadTexture(Resource::IMG_ENEMY, "Resources/game_sprites/Arcade - Pac-Man - General Sprites-allghosts.png") != AppStatus::OK)
 	{
 		return AppStatus::ERROR;
 	}
@@ -353,7 +353,7 @@ void Enemy::DrawDebug(const Color& col) const
 void Enemy::Release()
 {
 	ResourceManager& data = ResourceManager::Instance();
-	data.ReleaseTexture(Resource::IMG_PLAYER);
+	data.ReleaseTexture(Resource::IMG_ENEMY);
 
 	render->Release();
 }

@@ -8,7 +8,6 @@
 #include "Text.h"
 
 enum class DebugMode { OFF, SPRITES_AND_HITBOXES, ONLY_HITBOXES, SIZE };
-enum class UITypes { FRUIT, LIVES};
 
 //total amount of created levels
 #define LEVELS 2

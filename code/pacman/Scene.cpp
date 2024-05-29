@@ -162,7 +162,7 @@ AppStatus Scene::Init()
 		LOG("Failed to allocate memory for font");
 		return AppStatus::ERROR;
 	}
-	if (font->Initialise(Resource::IMG_FONT, "game_sprites/Arcade - Pac-Man - font.png", ' ', 8) != AppStatus::OK)
+	if (font->Initialise(Resource::IMG_FONT, "Resources/game_sprites/Arcade - Pac-Man - font.png", ' ', 8) != AppStatus::OK)
 	{
 		LOG("Failed to initialise Level");
 		return AppStatus::ERROR;
@@ -268,6 +268,9 @@ AppStatus Scene::LoadLevel(int stage)
 		if (stage == 2) levelintro = true;
 		siren = 0;
 		fruitcounter = FRUITTIME;
+		collectPellet = false;
+		pellet_timer = PELLETTIME;
+		if (IsSoundPlaying(sound_pellet)) StopSound(sound_pellet);
 	}
 	else
 	{

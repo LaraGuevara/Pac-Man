@@ -80,37 +80,37 @@ AppStatus Game::LoadResources()
 {
     ResourceManager& data = ResourceManager::Instance();
 
-    if (data.LoadTexture(Resource::IMG_MENU, "Menus/homescreen.png") != AppStatus::OK)
+    if (data.LoadTexture(Resource::IMG_MENU, "Resources/Menus/homescreen.png") != AppStatus::OK)
     {
         return AppStatus::ERROR;
     }
     img_menu = data.GetTexture(Resource::IMG_MENU);
 
-    if (data.LoadTexture(Resource::IMG_MENU_EMPTY, "Menus/homescreenempty.png") != AppStatus::OK)
+    if (data.LoadTexture(Resource::IMG_MENU_EMPTY, "Resources/Menus/homescreenempty.png") != AppStatus::OK)
     {
         return AppStatus::ERROR;
     }
     img_menu_empty = data.GetTexture(Resource::IMG_MENU_EMPTY);
 
-    if (data.LoadTexture(Resource::IMG_MENU_CLYDE, "Menus/homescreenclyde.png") != AppStatus::OK)
+    if (data.LoadTexture(Resource::IMG_MENU_CLYDE, "Resources/Menus/homescreenclyde.png") != AppStatus::OK)
     {
         return AppStatus::ERROR;
     }
     img_menu_clyde = data.GetTexture(Resource::IMG_MENU_CLYDE);
 
-    if (data.LoadTexture(Resource::IMG_MENU_BLINKY, "Menus/homescreenblinky.png") != AppStatus::OK)
+    if (data.LoadTexture(Resource::IMG_MENU_BLINKY, "Resources/Menus/homescreenblinky.png") != AppStatus::OK)
     {
         return AppStatus::ERROR;
     }
     img_menu_blinky = data.GetTexture(Resource::IMG_MENU_BLINKY);
 
-    if (data.LoadTexture(Resource::IMG_MENU_PINKY, "Menus/homescreenpinky.png") != AppStatus::OK)
+    if (data.LoadTexture(Resource::IMG_MENU_PINKY, "Resources/Menus/homescreenpinky.png") != AppStatus::OK)
     {
         return AppStatus::ERROR;
     }
     img_menu_pinky = data.GetTexture(Resource::IMG_MENU_PINKY);
 
-    if (data.LoadTexture(Resource::IMG_MENU_INKY, "Menus/homescreeninky.png") != AppStatus::OK)
+    if (data.LoadTexture(Resource::IMG_MENU_INKY, "Resources/Menus/homescreeninky.png") != AppStatus::OK)
     {
         return AppStatus::ERROR;
     }
@@ -119,7 +119,7 @@ AppStatus Game::LoadResources()
 
     //----------------------------------------------------------
     
-    if (data.LoadTexture(Resource::IMG_MENU1, "Menus/First menu.png") != AppStatus::OK)
+    if (data.LoadTexture(Resource::IMG_MENU1, "Resources/Menus/First menu.png") != AppStatus::OK)
     {
         return AppStatus::ERROR;
     }
