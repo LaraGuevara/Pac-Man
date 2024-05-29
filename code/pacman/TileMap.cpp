@@ -148,6 +148,26 @@ bool TileMap::TestCollisionWallDown(const AABB& box) const
 {
 	return CollisionY(box.pos + Point(0, box.height - 1), box.height);
 }
+bool TileMap::TestCollisionWallLeft(const AABB& box, bool door) const
+{
+	if (!door) return CollisionX(box.pos, box.height, door);
+	else return CollisionX(box.pos, box.height);
+}
+bool TileMap::TestCollisionWallRight(const AABB& box, bool door) const
+{
+	if (!door) return CollisionX(box.pos + Point(box.width - 1, 0), box.height, door);
+	else CollisionX(box.pos + Point(box.width - 1, 0), box.height);
+}
+bool TileMap::TestCollisionWallUp(const AABB& box, bool door) const
+{
+	if (!door) return CollisionY(box.pos, box.height, door);
+	else CollisionY(box.pos, box.height);
+}
+bool TileMap::TestCollisionWallDown(const AABB& box, bool door) const
+{
+	if (!door) return CollisionY(box.pos + Point(0, box.height - 1), box.height, door);
+	else CollisionY(box.pos + Point(0, box.height - 1), box.height);
+}
 Tile TileMap::TestSideExit(const AABB& box) const
 {
 	return GetTileIndex(box.pos.x, box.pos.y);
@@ -192,6 +212,45 @@ bool TileMap::CollisionY(const Point& p, int distance) const
 		//One solid or laddertop tile is sufficient
 		if (IsTileSolid(tile))
 			return true;
+	}
+	return false;
+}
+bool TileMap::CollisionX(const Point& p, int distance, bool door) const
+{
+	int x, y, y0, y1;
+
+	//Calculate the tile coordinates and the range of tiles to check for collision
+	x = p.x / TILE_SIZE;
+	y0 = p.y / TILE_SIZE;
+	y1 = (p.y + distance - 1) / TILE_SIZE;
+
+	//Iterate over the tiles within the vertical range
+	for (y = y0; y <= y1; ++y)
+	{
+		//One solid tile is sufficient
+		if (IsTileSolid(GetTileIndex(x, y))) return true;
+		if (GetTileIndex(x, y) == Tile::GHOST_DOOR or GetTileIndex(x, y) == Tile::GHOST_DOOR2) return true;
+	}
+	return false;
+}
+bool TileMap::CollisionY(const Point& p, int distance, bool door) const
+{
+	int x, y, x0, x1;
+	Tile tile;
+
+	//Calculate the tile coordinates and the range of tiles to check for collision
+	y = p.y / TILE_SIZE;
+	x0 = p.x / TILE_SIZE;
+	x1 = (p.x + distance - 1) / TILE_SIZE;
+
+	//Iterate over the tiles within the horizontal range
+	for (x = x0; x <= x1; ++x)
+	{
+		tile = GetTileIndex(x, y);
+
+		//One solid or laddertop tile is sufficient
+		if (IsTileSolid(tile)) return true;
+		if (tile == Tile::GHOST_DOOR or tile == Tile::GHOST_DOOR2) return true;
 	}
 	return false;
 }

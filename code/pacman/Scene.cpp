@@ -8,6 +8,8 @@ Scene::Scene()
 
 	blinky = nullptr;
 	inky = nullptr;
+	pinky = nullptr;
+	clyde = nullptr;
 
     level = nullptr;
 
@@ -28,6 +30,7 @@ Scene::Scene()
 
 	sound_pellet = data.GetSound(AudioResource::AUD_PELLET);
 	sound_fruit = data.GetSound(AudioResource::AUD_FRUIT);
+	sound_eatghost = data.GetSound(AudioResource::AUD_EATGHOST);
 
 	sirens[0] = data.GetSound(AudioResource::AUD_SIREN1);
 	sirens[1] = data.GetSound(AudioResource::AUD_SIREN2);
@@ -59,6 +62,18 @@ Scene::~Scene()
 		inky->Release();
 		delete inky;
 		inky = nullptr;
+	}
+	if (pinky != nullptr)
+	{
+		pinky->Release();
+		delete pinky;
+		pinky = nullptr;
+	}
+	if (clyde != nullptr)
+	{
+		clyde->Release();
+		delete clyde;
+		clyde = nullptr;
 	}
     if (level != nullptr)
     {
@@ -105,6 +120,18 @@ AppStatus Scene::Init()
 		LOG("Failed to allocate memory for enemy");
 		return AppStatus::ERROR;
 	}
+	pinky = new Enemy({ 0,0 }, State_e::IDLE, Look_e::LEFT, EnemyType::PINKY);
+	if (pinky == nullptr)
+	{
+		LOG("Failed to allocate memory for enemy");
+		return AppStatus::ERROR;
+	}
+	clyde = new Enemy({ 0,0 }, State_e::IDLE, Look_e::LEFT, EnemyType::CLYDE);
+	if (clyde == nullptr)
+	{
+		LOG("Failed to allocate memory for enemy");
+		return AppStatus::ERROR;
+	}
 	//create UI
 	livesUI = new UI({10, (WINDOW_HEIGHT)});
 
@@ -122,6 +149,16 @@ AppStatus Scene::Init()
 		return AppStatus::ERROR;
 	}
 	if (blinky->Initialise() != AppStatus::OK)
+	{
+		LOG("Failed to initialise Enemy");
+		return AppStatus::ERROR;
+	}
+	if (pinky->Initialise() != AppStatus::OK)
+	{
+		LOG("Failed to initialise Enemy");
+		return AppStatus::ERROR;
+	}
+	if (clyde->Initialise() != AppStatus::OK)
 	{
 		LOG("Failed to initialise Enemy");
 		return AppStatus::ERROR;
@@ -155,6 +192,8 @@ AppStatus Scene::Init()
 	player->SetTileMap(level);
 	inky->SetTileMap(level);
 	blinky->SetTileMap(level);
+	pinky->SetTileMap(level);
+	clyde->SetTileMap(level);
 	PlaySound(sound_intro);
 
 	font = new Text();
@@ -240,13 +279,13 @@ AppStatus Scene::LoadLevel(int stage)
 			 4, 50, 50, 50, 50, 50, 50, 25, 26, 50, 50, 50, 50, 25, 26, 50, 50, 50, 50, 25, 26, 50, 50, 50, 50, 50, 50, 3,
 			 6, 13, 13, 13, 13, 23, 50, 25, 28, 15, 15, 39,  0, 25, 26,  0, 40, 15, 15, 27, 26, 50, 24, 13, 13, 13, 13, 5,
 			 0,  0,  0,  0,  0,  4, 50, 25, 40, 21, 21, 27,  0, 37, 38,  0, 28, 21, 21, 39, 26, 50,  3,  0,  0,  0,  0, 0,
-			 0,  0,  0,  0,  0,  4, 50, 25, 26,  103,  0,  0,  0,  0,  0,  0,  0,  0,  0, 25, 26, 50,  3,  0,  0,  0,  0, 0,
+			 0,  0,  0,  0,  0,  4, 50, 25, 26,  0,  0,  0,  0,  101,  0,  0,  0,  0,  0, 25, 26, 50,  3,  0,  0,  0,  0, 0,
 			 0,  0,  0,  0,  0,  4, 50, 25, 26,  0, 30, 13, 34, 70, 71, 33, 13, 29,  0, 25, 26, 50,  3,  0,  0,  0,  0, 0,
 			11, 11, 11, 11, 11, 27, 50, 37, 38,  0,  3,  0,  0,  0,  0,  0,  0,  4,  0, 37, 38, 50, 28, 11, 11, 11, 11, 11,
-			-3,  0,  0,  0,  0,  0, 50,  0,  0,  0,  3,  0,  0, 0,  0,  0,  0,  4,  0,  0,  0, 50,  0,  0,  0,  0,  0, -2,
+			-3,  0,  0,  0,  0,  0, 50,  0,  0,  0,  3,  103,  0, 102,  0,  0,  104,  4,  0,  0,  0, 50,  0,  0,  0,  0,  0, -2,
 			13, 13, 13, 13, 13, 23, 50, 35, 36,  0,  3,  0,  0,  0,  0,  0,  0,  4,  0, 35, 36, 50, 24, 13, 13, 13, 13, 13,
 			 0,  0,  0,  0,  0,  4, 50, 25, 26,  0, 32, 11, 11, 11, 11, 11, 11, 31,  0, 25, 26, 50,  3,  0,  0,  0,  0, 0,
-			 0,  0,  0,  0,  0,  4, 50, 25, 26,  0,  0,  0,  0, 53,  0,  0,  0,  0,  101, 25, 26, 50,  3,  0,  0,  0,  0, 0,
+			 0,  0,  0,  0,  0,  4, 50, 25, 26,  0,  0,  0,  0, 53,  0,  0,  0,  0,  0, 25, 26, 50,  3,  0,  0,  0,  0, 0,
 			 0,  0,  0,  0,  0,  4, 50, 25, 26,  0, 40, 15, 15, 15, 15, 15, 15, 39,  0, 25, 26, 50,  3,  0,  0,  0,  0, 0,
 			 2, 11, 11, 11, 11, 27, 50, 37, 38,  0, 28, 21, 21, 36, 35, 21, 21, 27,  0, 37, 38, 50, 28, 11, 11, 11, 11, 1,
 			 4, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 25, 26, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 3,
@@ -270,6 +309,7 @@ AppStatus Scene::LoadLevel(int stage)
 		fruitcounter = FRUITTIME;
 		collectPellet = false;
 		pellet_timer = PELLETTIME;
+		inky->SetTargetExit();
 		if (IsSoundPlaying(sound_pellet)) StopSound(sound_pellet);
 	}
 	else
@@ -301,7 +341,7 @@ AppStatus Scene::LoadLevel(int stage)
 			}
 			else if (tile == Tile::INKY)
 			{
-				pos.x = x * TILE_SIZE + TILE_SIZE - 5;
+				pos.x = x * TILE_SIZE + TILE_SIZE / 2;
 				inkyX = pos.x;
 				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
 				inkyY = pos.y;
@@ -310,11 +350,33 @@ AppStatus Scene::LoadLevel(int stage)
 			}
 			else if (tile == Tile::BLINKY)
 			{
-				pos.x = x * TILE_SIZE - 2;
+				pos.x = x * TILE_SIZE;
 				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
 				blinkyX = pos.x;
 				blinkyY = pos.y;
 				blinky->SetPos(pos);
+				blinky->SetHome(pos);
+				pinky->SetHome(pos);
+				clyde->SetHome(pos);
+				inky->SetHome(pos);
+				map[i] = 0;
+			}
+			else if (tile == Tile::PINKY)
+			{
+				pos.x = x * TILE_SIZE + TILE_SIZE / 2;
+				pinkyX = pos.x;
+				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
+				pinkyY = pos.y;
+				pinky->SetPos(pos);
+				map[i] = 0;
+			}
+			else if (tile == Tile::CLYDE)
+			{
+				pos.x = x * TILE_SIZE;
+				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
+				clydeX = pos.x;
+				clydeY = pos.y;
+				clyde->SetPos(pos);
 				map[i] = 0;
 			}
 			else if (tile == Tile::DOT)
@@ -345,6 +407,18 @@ AppStatus Scene::LoadLevel(int stage)
 			{
 				if(level_count == 1) map[i] = (int)Tile::FRUIT_ICON_1;
 				if (level_count == 2) map[i] = (int)Tile::FRUIT_ICON_2;
+			}
+			else if (tile == Tile::GHOST_DOOR) {
+				pos.x = x * TILE_SIZE;
+				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
+				inky->SetTarget(pos);
+				pinky->SetTarget(pos);
+				clyde->SetTarget(pos);
+
+				blinky->SetHomeExit(pos);
+				inky->SetHomeExit(pos);
+				pinky->SetHomeExit(pos);
+				clyde->SetHomeExit(pos);
 			}
 			++i;
 		}
@@ -420,6 +494,8 @@ void Scene::Update()
 		player->Win();
 		inky->WinLose();
 		blinky->WinLose();
+		pinky->WinLose();
+		clyde->WinLose();
 		win = true;
 
 		LoadLevel(0);
@@ -445,6 +521,8 @@ void Scene::Update()
 			player->Intro(intro_count);
 			inky->Intro(intro_count);
 			blinky->Intro(intro_count);
+			pinky->Intro(intro_count);
+			clyde->Intro(intro_count);
 			--intro_count;
 		}
 	}
@@ -469,6 +547,8 @@ void Scene::Update()
 				player->SetPos({ playerX, playerY });
 				inky->SetPos({ inkyX, inkyY });
 				blinky->SetPos({ blinkyX, blinkyY });
+				pinky->SetPos({ pinkyX, pinkyY });
+				clyde->SetPos({ clydeX, clydeY });
 			}
 			else {
 				collectPellet = false;
@@ -487,23 +567,44 @@ void Scene::Update()
 		}
 
 		if (collectPellet) {
+
+			if (blinkyCaught and inkyCaught and clydeCaught and pinkyCaught) {
+				blinkyCaught = false;
+				inkyCaught = false;
+				clydeCaught = false;
+				pinkyCaught = false;
+				collectPellet = false;
+				ghost_points = 200;
+				pellet_timer = PELLETTIME;
+				StopSound(sound_pellet);
+			}
+
 			if (pellet_timer >= 0) {
 				if (!IsSoundPlaying(sound_pellet)) PlaySound(sound_pellet);
 				--pellet_timer;
 			}
 			else {
+				blinkyCaught = false;
+				inkyCaught = false;
+				clydeCaught = false;
+				pinkyCaught = false;
 				collectPellet = false;
+				ghost_points = 200;
 				pellet_timer = PELLETTIME;
 				StopSound(sound_pellet);
 			}
-			blinky->Pellet(collectPellet, pellet_timer);
-			inky->Pellet(collectPellet, pellet_timer);
+			if(!blinkyCaught) blinky->Pellet(collectPellet, pellet_timer);
+			if(!inkyCaught) inky->Pellet(collectPellet, pellet_timer);
+			if(!clydeCaught) clyde->Pellet(collectPellet, pellet_timer);
+			if(!pinkyCaught) pinky->Pellet(collectPellet, pellet_timer);
 		}
 
 		level->Update();
 		player->Update();
-		inky->Update();
-		blinky->Update();
+		inky->Update(player->GetDirection(), player->GetPosition(), blinky->GetEnemyPos());
+		blinky->Update(player->GetDirection(), player->GetPosition(), blinky->GetEnemyPos());
+		pinky->Update(player->GetDirection(), player->GetPosition(), blinky->GetEnemyPos());
+		clyde->Update(player->GetDirection(), player->GetPosition(), blinky->GetEnemyPos());
 		CheckCollisions();
 	}
 }
@@ -518,6 +619,8 @@ void Scene::Render()
 		player->DrawPlayer();
 		inky->DrawPlayer();
 		blinky->DrawPlayer();
+		pinky->DrawPlayer();
+		clyde->DrawPlayer();
 	}
 	if (debug == DebugMode::SPRITES_AND_HITBOXES || debug == DebugMode::ONLY_HITBOXES)
 	{
@@ -525,6 +628,8 @@ void Scene::Render()
 		player->DrawDebug(GREEN);
 		inky->DrawDebug(GREEN);
 		blinky->DrawDebug(GREEN);
+		pinky->DrawDebug(GREEN);
+		clyde->DrawDebug(GREEN);
 	}
 
 	RenderGUI();
@@ -536,6 +641,8 @@ void Scene::Release()
 	player->Release();
 	inky->Release();
 	blinky->Release();
+	pinky->Release();
+	clyde->Release();
 	livesUI->Release();
 	ClearLevel();
 }
@@ -596,12 +703,60 @@ void Scene::CheckCollisions()
 	if (!god_mode) {
 		enemy_box = inky->GetHitbox();
 		if (player_box.TestAABB(enemy_box)) {
-			if(!collectPellet) lose = true;
+			if (!inky->IsDead() and !collectPellet) lose = true;
+			else {
+				if (!inkyCaught) {
+					player->IncrScore(ghost_points);
+					ghost_points *= 2;
+				}
+				inky->caught = true;
+				inkyCaught = true;
+				PlaySound(sound_eatghost);
+			}
 		}
 		else {
 			enemy_box = blinky->GetHitbox();
 			if (player_box.TestAABB(enemy_box)) {
-				if (!collectPellet) lose = true;
+				if (!blinky->IsDead() and !collectPellet) lose = true;
+				else {
+					if (!blinkyCaught) {
+						player->IncrScore(ghost_points);
+						ghost_points *= 2;
+					}
+					blinky->caught = true;
+					blinkyCaught = true;
+					PlaySound(sound_eatghost);
+				}
+			}
+			else {
+				enemy_box = pinky->GetHitbox();
+				if (player_box.TestAABB(enemy_box)) {
+					if (!pinky->IsDead() and !collectPellet) lose = true;
+					else {
+						if (!pinkyCaught) {
+							player->IncrScore(ghost_points);
+							ghost_points *= 2;
+						}
+						pinky->caught = true;
+						pinkyCaught = true;
+						PlaySound(sound_eatghost);
+					}
+				}
+				else {
+					enemy_box = clyde->GetHitbox();
+					if (player_box.TestAABB(enemy_box)) {
+						if (!clyde->IsDead() and !collectPellet) lose = true;
+						else {
+							if (!clydeCaught) {
+								player->IncrScore(ghost_points);
+								ghost_points *= 2;
+							}
+							clyde->caught = true;
+							clydeCaught = true;
+							PlaySound(sound_eatghost);
+						}
+					}
+				}
 			}
 		}
 	}

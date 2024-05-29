@@ -55,8 +55,8 @@ private:
     //enemies
     Enemy* blinky;
     Enemy* inky;
-    //Enemy* clyde;
-    //Enemy* pinky;
+    Enemy* clyde;
+    Enemy* pinky;
 
     //UI
     UI* livesUI;
@@ -65,7 +65,7 @@ private:
     std::vector<Object*> objects;
 
     //efects
-    Sound sound_intro, sound_munch1, sound_munch2, sound_pellet, sound_fruit;
+    Sound sound_intro, sound_munch1, sound_munch2, sound_pellet, sound_fruit, sound_eatghost;
     //background sirem
     Sound sirens[5];
     //siren length for looping
@@ -94,11 +94,18 @@ private:
     //player and enemies intial position save
     int playerX, playerY;
     int blinkyX, blinkyY;
-    /*int pinkyX, pinkyY;*/
+    int pinkyX, pinkyY;
     int inkyX, inkyY;
-    /*int clydeX, clydeY;*/
+    int clydeX, clydeY;
     int fruitX, fruitY;
     int fruitcounter = FRUITTIME;
+
+    bool blinkyCaught = false;
+    bool inkyCaught = false;
+    bool clydeCaught = false;
+    bool pinkyCaught = false;
+
+    int ghost_points = 200;
 
     Text* font;
 

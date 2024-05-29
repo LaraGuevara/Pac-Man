@@ -10,25 +10,20 @@
 #define ENEMY_PHYSICAL_HEIGHT	8
 
 //Horizontal speed and vertical speed while falling down
-#define ENEMY_SPEED			2
+#define ENEMY_SPEED			1
 
 //Logic states
 enum class State_e { IDLE, WALKING, PELLET, EYES };
 enum class Look_e { RIGHT, LEFT, UP, DOWN };
+enum class Mode_e { CHASE, SCATTER };
 enum class EnemyType {BLINKY, PINKY, INKY, CLYDE};
 
 //Rendering states
 enum class EnemyAnim {
 	IDLE,
 	WALKING_LEFT, WALKING_RIGHT, WALKING_UP, WALKING_DOWN, PELLET, PELLET_FLASH,
-	 HIDDEN,
+	 HIDDEN, EYES_LEFT, EYES_RIGHT, EYES_UP, EYES_DOWN,
 	NUM_ANIMATIONS
-};
-
-struct Step {
-	Point speed;
-	int frames;
-	int anim;
 };
 
 class Enemy : public Entity
@@ -42,8 +37,16 @@ public:
 
 	void Intro(int count);
 	void Pellet(bool ifPellet, int count);
+	void SetTarget(Point t);
+	void SetTargetExit();
+	void SetHome(Point t);
+	void SetHomeExit(Point t);
+	bool IsDead();
+	bool caught = false;
+	bool useDoor = false;
+	Point GetEnemyPos();
 
-	void Update();
+	void Update(Point pacmanDir, Point pacmanPos, Point blinkypos);
 	void Release();
 	void DrawDebug(const Color& col) const;
 	void WinLose();
@@ -57,8 +60,10 @@ private:
 	bool IsLookingUp() const;
 	bool IsLookingDown() const;
 
-	//Player mechanics
-	void Move();
+	//Enemy mechanics
+	float GetTargetDistance(Point dir);
+	void Move(Point pacmanDir, Point pacmanPos, Point blinkypos);
+	void UpdateTarget(Point pacmanDir, Point pacmanPos, Point blinkypos);
 
 	//Animation management
 	void SetAnimation(int id);
@@ -74,16 +79,21 @@ private:
 	void ChangeAnimUp();
 	void ChangeAnimDown();
 
-	void IntroPatternInit();
 	void UpdateLook(int anim_id);
 	int current_step;
 	int current_frames;
-	std::vector<Step> pattern;
 
 	State_e state;
 	Look_e look;
+	Mode_e mode;
 	EnemyType type;
 	TileMap* map;
+
+	Sound sound_retreat;
+
+	Point home;
+	Point home_exit;
+	Point target;
 
 	bool vulnearble = false;
 	bool flash = true;

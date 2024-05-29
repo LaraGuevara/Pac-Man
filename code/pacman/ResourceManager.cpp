@@ -45,6 +45,9 @@ void ResourceManager::LoadSounds()
 
     sounds[(int)AudioResource::AUD_PELLET] = LoadSound("Resources/game audio/power_pellet.wav");
     sounds[(int)AudioResource::AUD_FRUIT] = LoadSound("Resources/game audio/eat_fruit.wav");
+    sounds[(int)AudioResource::AUD_EATGHOST] = LoadSound("Resources/game audio/eat_ghost.wav");
+
+    sounds[(int)AudioResource::AUD_RETREAT] = LoadSound("Resources/game audio/retreating.wav");
 }
 
 //Release the texture associated with the key id

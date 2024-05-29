@@ -32,8 +32,11 @@ enum class Tile {
 	SMALLCORNER_TR, SMALLCORNER_TL, SMALLCORNER_BR, SMALLCORNER_BL,
 	TOPCORNERWALL_L, TOPCORNERWALL_R,
 
+
 	// 50 <= id < 100: special tiles
 	DOT = 50, LARGE_DOT, PELLET, FRUIT,
+
+	GHOST_DOOR = 70, GHOST_DOOR2,
 
 	//Intervals
 	STATIC_FIRST = DOUBLECORNER_TR,
@@ -73,6 +76,11 @@ public:
 	bool TestCollisionWallUp(const AABB& box) const;
 	bool TestCollisionWallDown(const AABB& box) const;
 
+	bool TestCollisionWallLeft(const AABB& box, bool door) const;
+	bool TestCollisionWallRight(const AABB& box, bool door) const;
+	bool TestCollisionWallUp(const AABB& box, bool door) const;
+	bool TestCollisionWallDown(const AABB& box, bool door) const;
+
 	Tile TestSideExit(const AABB& box) const;
 	bool SolidTest(const AABB& box) const;
 
@@ -86,6 +94,8 @@ private:
 	bool IsTileSolid(Tile tile) const;
 	bool CollisionX(const Point& p, int distance) const;
 	bool CollisionY(const Point& p, int distance) const;
+	bool CollisionX(const Point& p, int distance, bool door) const;
+	bool CollisionY(const Point& p, int distance, bool door) const;
 
 	//Tile map
 	Tile* map;
