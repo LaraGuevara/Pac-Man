@@ -639,10 +639,12 @@ void Scene::Release()
 {
     level->Release();
 	player->Release();
+
 	inky->Release();
 	blinky->Release();
 	pinky->Release();
 	clyde->Release();
+
 	livesUI->Release();
 	ClearLevel();
 }

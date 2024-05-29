@@ -111,7 +111,7 @@ void Enemy::IntroUpdate(bool turn)
 {
 	Sprite* sprite = dynamic_cast<Sprite*>(render);
 	if (turn) {
-		pos.x += (ENEMY_SPEED - 1);
+		pos.x += ((ENEMY_SPEED*2) - 1);
 		if (state != State_e::PELLET) {
 			state = State_e::PELLET;
 			SetAnimation((int)EnemyAnim::PELLET);
@@ -129,7 +129,7 @@ void Enemy::IntroUpdate(bool turn)
 		}
 	}
 	else {
-		pos.x += -ENEMY_SPEED;
+		pos.x += -(ENEMY_SPEED * 2);
 		if (state == State_e::IDLE) StartWalkingLeft();
 		else {
 			if (!IsLookingLeft()) ChangeAnimLeft();
