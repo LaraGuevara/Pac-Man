@@ -28,6 +28,7 @@ Scene::Scene()
 	sound_munch2 = data.GetSound(AudioResource::AUD_MUNCH2);
 
 	sound_pellet = data.GetSound(AudioResource::AUD_PELLET);
+	sound_fruit = data.GetSound(AudioResource::AUD_FRUIT);
 
 	sirens[0] = data.GetSound(AudioResource::AUD_SIREN1);
 	sirens[1] = data.GetSound(AudioResource::AUD_SIREN2);
@@ -379,7 +380,17 @@ void Scene::Update()
 			objectX = (int)GetRandomValue(7, LEVEL_WIDTH - 7);
 			objectY = (int)GetRandomValue(7, LEVEL_HEIGHT - 7);
 			AABB box({ objectX, objectY }, TILE_SIZE, TILE_SIZE);
-			if (!level->SolidTest(box)) checkTile = false;
+			if (objectX <= 16 and objectX >= 11) {
+				if (objectY >= 16 and objectY <= 18) {
+					checkTile = true;
+				}
+				else {
+					if (!level->SolidTest(box)) checkTile = false;
+				}
+			}
+			else {
+				if (!level->SolidTest(box)) checkTile = false;
+			}
 		}
 		objectX = objectX * TILE_SIZE;
 		objectY = objectY * TILE_SIZE + TILE_SIZE - 1;
@@ -557,6 +568,9 @@ void Scene::CheckCollisions()
 			}
             else if ((*it)->Sounds() == (int)ObjectType::PELLET) {
 				collectPellet = true;
+			}
+			else if ((*it)->Sounds() == (int)ObjectType::CHERRY or (*it)->Sounds() == (int)ObjectType::STRAWBERRY) {
+				PlaySound(sound_fruit);
 			}
 
 			//Delete the object

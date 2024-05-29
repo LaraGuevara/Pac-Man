@@ -67,7 +67,7 @@ private:
     std::vector<Object*> objects;
 
     //efects
-    Sound sound_intro, sound_munch1, sound_munch2, sound_pellet;
+    Sound sound_intro, sound_munch1, sound_munch2, sound_pellet, sound_fruit;
     //background sirem
     Sound sirens[5];
     //siren length for looping

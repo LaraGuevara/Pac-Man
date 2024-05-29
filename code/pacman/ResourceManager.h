@@ -32,6 +32,7 @@ enum class AudioResource {
     AUD_SIREN4,
     AUD_SIREN5,
     AUD_PELLET,
+    AUD_FRUIT,
     AUD_NUM
 };
 
