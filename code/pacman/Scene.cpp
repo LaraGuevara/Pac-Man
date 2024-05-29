@@ -40,6 +40,8 @@ Scene::Scene()
 Scene::~Scene()
 {
 	StopSound(sirens[siren]);
+	if(IsSoundPlaying(sound_pellet)) StopSound(sound_pellet);
+
 	if (player != nullptr)
 	{
 		player->Release();
@@ -274,6 +276,7 @@ AppStatus Scene::LoadLevel(int stage)
 		};
 
 		if(stage == 1) player->InitScore();
+		if (stage == 2) levelintro = true;
 		siren = 0;
 		fruitcounter = FRUITTIME;
 	}
@@ -373,17 +376,16 @@ void Scene::Update()
 		int objectX, objectY;
 		bool checkTile = true;
 		while (checkTile) {
-			objectX = GetRandomValue(7, LEVEL_WIDTH-7)*TILE_SIZE;
-			objectY = GetRandomValue(7, LEVEL_HEIGHT-7) * TILE_SIZE;
+			objectX = (int)GetRandomValue(7, LEVEL_WIDTH - 7);
+			objectY = (int)GetRandomValue(7, LEVEL_HEIGHT - 7);
 			AABB box({ objectX, objectY }, TILE_SIZE, TILE_SIZE);
 			if (!level->SolidTest(box)) checkTile = false;
 		}
-		objectX = objectX + TILE_SIZE/2;
-		objectY = objectY + TILE_SIZE*2 - 2.15;
+		objectX = objectX * TILE_SIZE;
+		objectY = objectY * TILE_SIZE + TILE_SIZE - 1;
 		Object* obj = new Object({objectX, objectY}, level_count);
 		objects.push_back(obj);
 	}
-
 
 	//godmode
 	if (IsKeyPressed(KEY_F4)) {
@@ -421,11 +423,13 @@ void Scene::Update()
 	}
 	fruitcounter--;
 
-	if (intro) 
+	if (intro or levelintro) 
 	{
 		if (intro_count <= 0) {
-			intro = false;
-			player->setLives(2);
+			if (intro) player->setLives(2);
+			if(intro) intro = false;
+			if (levelintro) levelintro = false;
+			intro_count = 240;
 		}
 		else 
 		{
@@ -621,8 +625,8 @@ void Scene::RenderGUI() const
 	livesUI->DrawPlayer();
 	fruitUI->DrawPlayer();
 
-	if (intro) font->Draw((WINDOW_WIDTH / 2)-22, (WINDOW_HEIGHT / 2)+15, TextFormat("READY!"), YELLOW);
-	if (intro_count > 60) font->Draw((WINDOW_WIDTH / 2) - 40, (WINDOW_HEIGHT / 2) - 32, TextFormat("PLAYER ONE"), CYANBLUE);
+	if (intro or levelintro) font->Draw((WINDOW_WIDTH / 2)-22, (WINDOW_HEIGHT / 2)+15, TextFormat("READY!"), YELLOW);
+	if (intro and intro_count > 60) font->Draw((WINDOW_WIDTH / 2) - 40, (WINDOW_HEIGHT / 2) - 32, TextFormat("PLAYER ONE"), CYANBLUE);
 
 	if(god_mode) font->Draw(WINDOW_WIDTH - 125, 5, TextFormat("GOD MODE ACTIVE"));
 }

@@ -40,7 +40,7 @@ Object::Object(const Point& p, int fruit) : Entity(p, OBJECT_PHYSICAL_SIZE, OBJE
 	}
 
 	ResourceManager& data = ResourceManager::Instance();
-	render = new StaticImage(data.GetTexture(Resource::IMG_TILES), rc);
+	render = new StaticImage(data.GetTexture(Resource::IMG_TILES), rc, true);
 }
 Object::~Object()
 {

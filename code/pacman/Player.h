@@ -38,6 +38,8 @@ public:
 	int GetScore();
 	void LoseLives();
 	int GetLives();
+	Point GetDirection();
+	Point GetPosition();
 	void setLives(int l);
 
 	void Update();

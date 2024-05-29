@@ -121,6 +121,13 @@ int Player::GetLives()
 {
 	return lives;
 }
+Point Player::GetDirection() 
+{
+	return dir;
+}
+Point Player::GetPosition() {
+	return pos;
+}
 void Player::setLives(int l) 
 {
 	lives = l;

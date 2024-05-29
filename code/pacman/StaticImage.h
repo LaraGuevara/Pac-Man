@@ -5,6 +5,7 @@ class StaticImage : public RenderComponent
 {
 public:
     StaticImage(const Texture2D* texture, const Rectangle& rect);
+    StaticImage(const Texture2D* texture, const Rectangle& rect, bool t);
     ~StaticImage();
 
     void Draw(int x, int y) const override;
@@ -14,4 +15,5 @@ public:
 private:
     Rectangle rc;
     const Texture2D* img;
+    bool type = false;
 };

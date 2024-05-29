@@ -39,6 +39,7 @@ public:
 
     bool EndGame = false;
     bool intro = false;
+    bool levelintro = 0;
 
 private:
     AppStatus LoadLevel(int stage);

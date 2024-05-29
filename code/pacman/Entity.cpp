@@ -43,8 +43,6 @@ Point Entity::GetRenderingPositionPlayer() const
 	p.x = pos.x + width / 2 - ((frame_width / 2));
 	p.y = pos.y - height / 2 - ((frame_height /2) -1 );
 
-	/*p.x = pos.x + width / 2 - frame_width / 2;
-	p.y = pos.y - (frame_height - 1);*/
 	return p;
 }
 void Entity::Draw() const
