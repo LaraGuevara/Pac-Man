@@ -60,7 +60,6 @@ private:
     //Enemy* pinky;
 
     //UI
-    UI* fruitUI;
     UI* livesUI;
 
     TileMap* level;

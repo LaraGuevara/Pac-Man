@@ -74,6 +74,9 @@ void TileMap::InitTileDictionary()
 	dict_rect[(int)Tile::TOPCORNERWALL_L] = { 10 * k, 2 * k, n, n };
 	dict_rect[(int)Tile::TOPCORNERWALL_R] = { 11 * k, 2 * k, n, n };
 
+	dict_rect[(int)Tile::FRUIT_ICON_1] = { 0, 3 * k, n*2, n*2 };
+	dict_rect[(int)Tile::FRUIT_ICON_2] = { n*2, 3 * k, n*2, n*2 };
+
 }
 AppStatus TileMap::Initialise()
 {

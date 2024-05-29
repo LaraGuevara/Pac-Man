@@ -4,18 +4,16 @@
 #include "Entity.h"
 
 enum class UIElements {
-	LIVES_ICON1, LIVES_ICON2, LIVES_ICON3, LIVES_ICONNONE, ICON_NUM, FRUIT1, FRUIT2
+	LIVES_ICON1, LIVES_ICON2, LIVES_ICON3, LIVES_ICONNONE, ICON_NUM
 };
 
 class UI : public Entity {
 public:
-	UI(const Point &p, int t);
+	UI(const Point &p);
 	~UI();
 
 	AppStatus Initialise();
-	void RenderUI(int level, int lives);
-	void RenderUIFruit(int level);
-	void RenderUILives(int lives);
+	void RenderUI(int lives);
 	void Release();
 
 private:

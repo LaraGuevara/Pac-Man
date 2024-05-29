@@ -11,7 +11,6 @@ Scene::Scene()
 
     level = nullptr;
 
-	fruitUI = nullptr;
 	livesUI = nullptr;
 
 	font = nullptr;
@@ -67,11 +66,6 @@ Scene::~Scene()
         delete level;
         level = nullptr;
     }
-	if (fruitUI != nullptr) {
-		fruitUI->Release();
-		delete fruitUI;
-		fruitUI = nullptr;
-	}
 	if (livesUI != nullptr) {
 		livesUI->Release();
 		delete livesUI;
@@ -112,8 +106,7 @@ AppStatus Scene::Init()
 		return AppStatus::ERROR;
 	}
 	//create UI
-	fruitUI = new UI({70, (WINDOW_HEIGHT)}, (int)UITypes::FRUIT);
-	livesUI = new UI({10, (WINDOW_HEIGHT)}, (int)UITypes::LIVES);
+	livesUI = new UI({10, (WINDOW_HEIGHT)});
 
 	//Initialise player
 	if (player->Initialise() != AppStatus::OK)
@@ -134,11 +127,6 @@ AppStatus Scene::Init()
 		return AppStatus::ERROR;
 	}
 	//initialize UI
-	
-	if (fruitUI->Initialise() != AppStatus::OK) {
-		LOG("Failed to initialise fruit UI");
-		return AppStatus::ERROR;
-	}
 	if (livesUI->Initialise() != AppStatus::OK) {
 		LOG("Failed to initialise lives UI");
 		return AppStatus::ERROR;
@@ -272,7 +260,7 @@ AppStatus Scene::LoadLevel(int stage)
 			 4, 50, 28, 21, 21, 21, 21, 21, 21, 21, 21, 27, 50, 37, 38, 50, 28, 21, 21, 21, 21, 21, 21, 21, 21, 27, 50, 3,
 			 4, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 50, 3,
 			 6, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 13, 5,
-			 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 0,
+			 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  200, 0, 0,
 			 0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, 0 
 		};
 
@@ -350,6 +338,11 @@ AppStatus Scene::LoadLevel(int stage)
 				fruitY = pos.y;
 				map[i] = 0;
 			}
+			else if (tile == Tile::FRUIT_ICON)
+			{
+				if(level_count == 1) map[i] = (int)Tile::FRUIT_ICON_1;
+				if (level_count == 2) map[i] = (int)Tile::FRUIT_ICON_2;
+			}
 			++i;
 		}
 	}
@@ -416,6 +409,8 @@ void Scene::Update()
 
 	if (EndLevel) {
 		StopSound(sirens[siren]);
+		collectPellet = false;
+		pellet_timer = PELLETTIME;
 		if(IsSoundPlaying(sound_pellet)) StopSound(sound_pellet);
 
 		level->win = true;
@@ -473,6 +468,9 @@ void Scene::Update()
 				blinky->SetPos({ blinkyX, blinkyY });
 			}
 			else {
+				collectPellet = false;
+				pellet_timer = PELLETTIME;
+				if (IsSoundPlaying(sound_pellet)) StopSound(sound_pellet); StopSound(sound_pellet);
 				EndGame = true;
 			}
 		}
@@ -535,7 +533,6 @@ void Scene::Release()
 	player->Release();
 	inky->Release();
 	blinky->Release();
-	fruitUI->Release();
 	livesUI->Release();
 	ClearLevel();
 }
@@ -634,10 +631,8 @@ void Scene::RenderGUI() const
 	font->Draw(10, 5, TextFormat("1UP"));
 	font->Draw(10, 13, TextFormat("%d", player->GetScore()));
 	
-	fruitUI->RenderUI(level_count, player->GetLives());
-	livesUI->RenderUI(level_count, player->GetLives());
+	livesUI->RenderUI(player->GetLives());
 	livesUI->DrawPlayer();
-	fruitUI->DrawPlayer();
 
 	if (intro or levelintro) font->Draw((WINDOW_WIDTH / 2)-22, (WINDOW_HEIGHT / 2)+15, TextFormat("READY!"), YELLOW);
 	if (intro and intro_count > 60) font->Draw((WINDOW_WIDTH / 2) - 40, (WINDOW_HEIGHT / 2) - 32, TextFormat("PLAYER ONE"), CYANBLUE);
