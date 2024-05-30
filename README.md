@@ -34,10 +34,13 @@ Pac-Man is a maze game developed for arcades by Namco and released in Japan on M
 
 ## FEATURES
 ---
-* Basic player movements
+* Player movements
 * Score and Lives systems
-* Basic UI
-* Enemies (simple movements and death condition)
+* UI
+* Enemies 
 * Menus
 * Debug functions
+* Objects and power-up
+* Audio features
+* Levels
  
