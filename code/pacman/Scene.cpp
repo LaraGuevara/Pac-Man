@@ -9,7 +9,7 @@ Scene::Scene()
 	blinky = nullptr;
 	inky = nullptr;
 	pinky = nullptr;
-	clyde = nullptr;
+	/*clyde = nullptr;*/
 
     level = nullptr;
 
@@ -69,12 +69,12 @@ Scene::~Scene()
 		delete pinky;
 		pinky = nullptr;
 	}
-	if (clyde != nullptr)
+	/*if (clyde != nullptr)
 	{
 		clyde->Release();
 		delete clyde;
 		clyde = nullptr;
-	}
+	}*/
     if (level != nullptr)
     {
 		level->Release();
@@ -126,12 +126,12 @@ AppStatus Scene::Init()
 		LOG("Failed to allocate memory for enemy");
 		return AppStatus::ERROR;
 	}
-	clyde = new Enemy({ 0,0 }, State_e::IDLE, Look_e::LEFT, EnemyType::CLYDE);
+	/*clyde = new Enemy({ 0,0 }, State_e::IDLE, Look_e::LEFT, EnemyType::CLYDE);
 	if (clyde == nullptr)
 	{
 		LOG("Failed to allocate memory for enemy");
 		return AppStatus::ERROR;
-	}
+	}*/
 	//create UI
 	livesUI = new UI({10, (WINDOW_HEIGHT)});
 
@@ -158,11 +158,11 @@ AppStatus Scene::Init()
 		LOG("Failed to initialise Enemy");
 		return AppStatus::ERROR;
 	}
-	if (clyde->Initialise() != AppStatus::OK)
+	/*if (clyde->Initialise() != AppStatus::OK)
 	{
 		LOG("Failed to initialise Enemy");
 		return AppStatus::ERROR;
-	}
+	}*/
 	//initialize UI
 	if (livesUI->Initialise() != AppStatus::OK) {
 		LOG("Failed to initialise lives UI");
@@ -193,7 +193,7 @@ AppStatus Scene::Init()
 	inky->SetTileMap(level);
 	blinky->SetTileMap(level);
 	pinky->SetTileMap(level);
-	clyde->SetTileMap(level);
+	/*clyde->SetTileMap(level);*/
 	PlaySound(sound_intro);
 
 	font = new Text();
@@ -282,7 +282,7 @@ AppStatus Scene::LoadLevel(int stage)
 			 0,  0,  0,  0,  0,  4, 50, 25, 26,  0,  0,  0,  0,  101,  0,  0,  0,  0,  0, 25, 26, 50,  3,  0,  0,  0,  0, 0,
 			 0,  0,  0,  0,  0,  4, 50, 25, 26,  0, 30, 13, 34, 70, 71, 33, 13, 29,  0, 25, 26, 50,  3,  0,  0,  0,  0, 0,
 			11, 11, 11, 11, 11, 27, 50, 37, 38,  0,  3,  0,  0,  0,  0,  0,  0,  4,  0, 37, 38, 50, 28, 11, 11, 11, 11, 11,
-			-3,  0,  0,  0,  0,  0, 50,  0,  0,  0,  3,  103,  0, 102,  0,  0,  104,  4,  0,  0,  0, 50,  0,  0,  0,  0,  0, -2,
+			-3,  0,  0,  0,  0,  0, 50,  0,  0,  0,  3,  103,  0, 102,  0,  0,  0,  4,  0,  0,  0, 50,  0,  0,  0,  0,  0, -2,
 			13, 13, 13, 13, 13, 23, 50, 35, 36,  0,  3,  0,  0,  0,  0,  0,  0,  4,  0, 35, 36, 50, 24, 13, 13, 13, 13, 13,
 			 0,  0,  0,  0,  0,  4, 50, 25, 26,  0, 32, 11, 11, 11, 11, 11, 11, 31,  0, 25, 26, 50,  3,  0,  0,  0,  0, 0,
 			 0,  0,  0,  0,  0,  4, 50, 25, 26,  0,  0,  0,  0, 53,  0,  0,  0,  0,  0, 25, 26, 50,  3,  0,  0,  0,  0, 0,
@@ -357,7 +357,7 @@ AppStatus Scene::LoadLevel(int stage)
 				blinky->SetPos(pos);
 				blinky->SetHome(pos);
 				pinky->SetHome(pos);
-				clyde->SetHome(pos);
+				/*clyde->SetHome(pos);*/
 				inky->SetHome(pos);
 				map[i] = 0;
 			}
@@ -370,7 +370,7 @@ AppStatus Scene::LoadLevel(int stage)
 				pinky->SetPos(pos);
 				map[i] = 0;
 			}
-			else if (tile == Tile::CLYDE)
+			/*else if (tile == Tile::CLYDE)
 			{
 				pos.x = x * TILE_SIZE;
 				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
@@ -378,7 +378,7 @@ AppStatus Scene::LoadLevel(int stage)
 				clydeY = pos.y;
 				clyde->SetPos(pos);
 				map[i] = 0;
-			}
+			}*/
 			else if (tile == Tile::DOT)
 			{
 				pos.x = x * TILE_SIZE;
@@ -413,12 +413,12 @@ AppStatus Scene::LoadLevel(int stage)
 				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
 				inky->SetTarget(pos);
 				pinky->SetTarget(pos);
-				clyde->SetTarget(pos);
+				/*clyde->SetTarget(pos);*/
 
 				blinky->SetHomeExit(pos);
 				inky->SetHomeExit(pos);
 				pinky->SetHomeExit(pos);
-				clyde->SetHomeExit(pos);
+				/*clyde->SetHomeExit(pos);*/
 			}
 			++i;
 		}
@@ -495,7 +495,7 @@ void Scene::Update()
 		inky->WinLose();
 		blinky->WinLose();
 		pinky->WinLose();
-		clyde->WinLose();
+		/*clyde->WinLose();*/
 		win = true;
 
 		LoadLevel(0);
@@ -522,7 +522,7 @@ void Scene::Update()
 			inky->Intro(intro_count);
 			blinky->Intro(intro_count);
 			pinky->Intro(intro_count);
-			clyde->Intro(intro_count);
+			/*clyde->Intro(intro_count);*/
 			--intro_count;
 		}
 	}
@@ -548,7 +548,7 @@ void Scene::Update()
 				inky->SetPos({ inkyX, inkyY });
 				blinky->SetPos({ blinkyX, blinkyY });
 				pinky->SetPos({ pinkyX, pinkyY });
-				clyde->SetPos({ clydeX, clydeY });
+				/*clyde->SetPos({ clydeX, clydeY });*/
 			}
 			else {
 				collectPellet = false;
@@ -568,10 +568,10 @@ void Scene::Update()
 
 		if (collectPellet) {
 
-			if (blinkyCaught and inkyCaught and clydeCaught and pinkyCaught) {
+			if (blinkyCaught and inkyCaught /*and clydeCaught*/ and pinkyCaught) {
 				blinkyCaught = false;
 				inkyCaught = false;
-				clydeCaught = false;
+				/*clydeCaught = false;*/
 				pinkyCaught = false;
 				collectPellet = false;
 				ghost_points = 200;
@@ -586,7 +586,7 @@ void Scene::Update()
 			else {
 				blinkyCaught = false;
 				inkyCaught = false;
-				clydeCaught = false;
+				/*clydeCaught = false;*/
 				pinkyCaught = false;
 				collectPellet = false;
 				ghost_points = 200;
@@ -595,7 +595,7 @@ void Scene::Update()
 			}
 			if(!blinkyCaught) blinky->Pellet(collectPellet, pellet_timer);
 			if(!inkyCaught) inky->Pellet(collectPellet, pellet_timer);
-			if(!clydeCaught) clyde->Pellet(collectPellet, pellet_timer);
+			/*if(!clydeCaught) clyde->Pellet(collectPellet, pellet_timer);*/
 			if(!pinkyCaught) pinky->Pellet(collectPellet, pellet_timer);
 		}
 
@@ -604,7 +604,7 @@ void Scene::Update()
 		inky->Update(player->GetDirection(), player->GetPosition(), blinky->GetEnemyPos());
 		blinky->Update(player->GetDirection(), player->GetPosition(), blinky->GetEnemyPos());
 		pinky->Update(player->GetDirection(), player->GetPosition(), blinky->GetEnemyPos());
-		clyde->Update(player->GetDirection(), player->GetPosition(), blinky->GetEnemyPos());
+		/*clyde->Update(player->GetDirection(), player->GetPosition(), blinky->GetEnemyPos());*/
 		CheckCollisions();
 	}
 }
@@ -620,7 +620,7 @@ void Scene::Render()
 		inky->DrawPlayer();
 		blinky->DrawPlayer();
 		pinky->DrawPlayer();
-		clyde->DrawPlayer();
+		/*clyde->DrawPlayer();*/
 	}
 	if (debug == DebugMode::SPRITES_AND_HITBOXES || debug == DebugMode::ONLY_HITBOXES)
 	{
@@ -629,7 +629,7 @@ void Scene::Render()
 		inky->DrawDebug(GREEN);
 		blinky->DrawDebug(GREEN);
 		pinky->DrawDebug(GREEN);
-		clyde->DrawDebug(GREEN);
+		/*clyde->DrawDebug(GREEN);*/
 	}
 
 	RenderGUI();
@@ -643,7 +643,7 @@ void Scene::Release()
 	inky->Release();
 	blinky->Release();
 	pinky->Release();
-	clyde->Release();
+	/*clyde->Release();*/
 
 	livesUI->Release();
 	ClearLevel();
@@ -744,7 +744,7 @@ void Scene::CheckCollisions()
 						PlaySound(sound_eatghost);
 					}
 				}
-				else {
+				/*else {
 					enemy_box = clyde->GetHitbox();
 					if (player_box.TestAABB(enemy_box)) {
 						if (!clyde->IsDead() and !collectPellet) lose = true;
@@ -758,7 +758,7 @@ void Scene::CheckCollisions()
 							PlaySound(sound_eatghost);
 						}
 					}
-				}
+				}*/
 			}
 		}
 	}

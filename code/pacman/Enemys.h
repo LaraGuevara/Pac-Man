@@ -16,7 +16,7 @@
 enum class State_e { IDLE, WALKING, PELLET, EYES };
 enum class Look_e { RIGHT, LEFT, UP, DOWN };
 enum class Mode_e { CHASE, SCATTER };
-enum class EnemyType {BLINKY, PINKY, INKY, CLYDE};
+enum class EnemyType {BLINKY, PINKY, INKY/*, CLYDE*/};
 
 //Rendering states
 enum class EnemyAnim {

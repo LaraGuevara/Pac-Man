@@ -55,7 +55,7 @@ private:
     //enemies
     Enemy* blinky;
     Enemy* inky;
-    Enemy* clyde;
+    /*Enemy* clyde;*/
     Enemy* pinky;
 
     //UI
@@ -96,13 +96,13 @@ private:
     int blinkyX, blinkyY;
     int pinkyX, pinkyY;
     int inkyX, inkyY;
-    int clydeX, clydeY;
+    /*int clydeX, clydeY;*/
     int fruitX, fruitY;
     int fruitcounter = FRUITTIME;
 
     bool blinkyCaught = false;
     bool inkyCaught = false;
-    bool clydeCaught = false;
+   /* bool clydeCaught = false;*/
     bool pinkyCaught = false;
 
     int ghost_points = 200;

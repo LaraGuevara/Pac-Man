@@ -32,7 +32,7 @@ private:
 	bool isPinky = false;
 	bool isInky = false;
 	bool isBlinky = false;
-	bool isClyde = false;
+	/*bool isClyde = false;*/
 	bool isDot = true;
 
 	Player* PacMan;
@@ -40,7 +40,7 @@ private:
 	Enemy* Blinky;
 	Enemy* Inky;
 	Enemy* Pinky;
-	Enemy* Clyde;
+	/*Enemy* Clyde;*/
 
 	Object* Dot;
 

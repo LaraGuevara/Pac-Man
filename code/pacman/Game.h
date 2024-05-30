@@ -34,7 +34,7 @@ private:
     const Texture2D* img_menu_blinky;
     const Texture2D* img_menu_pinky;
     const Texture2D* img_menu_inky;
-    const Texture2D* img_menu_clyde;
+    /*const Texture2D* img_menu_clyde;*/
     const Texture2D* menu1;
     
     int counter = 0;

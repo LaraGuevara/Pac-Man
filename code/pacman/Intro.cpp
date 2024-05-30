@@ -8,7 +8,7 @@ Intro::Intro()
 	Blinky = nullptr;
 	Pinky = nullptr;
 	Inky = nullptr;
-	Clyde = nullptr;
+	/*Clyde = nullptr;*/
 	Dot = nullptr;
 	introScene = nullptr;
 
@@ -40,11 +40,11 @@ Intro::~Intro()
 		delete Pinky;
 		Pinky = nullptr;
 	}
-	if (Clyde != nullptr) {
+	/*if (Clyde != nullptr) {
 		Clyde->Release();
 		delete Clyde;
 		Clyde = nullptr;
-	}
+	}*/
 	if (Dot != nullptr) {
 		delete Dot;
 		Dot = nullptr;
@@ -82,12 +82,12 @@ AppStatus Intro::Init()
 		LOG("Failed to allocate memory for intro enemy");
 		return AppStatus::ERROR;
 	}
-	Clyde = new Enemy({ 0,0 }, State_e::IDLE, Look_e::LEFT, EnemyType::CLYDE);
+	/*Clyde = new Enemy({ 0,0 }, State_e::IDLE, Look_e::LEFT, EnemyType::CLYDE);
 	if (Clyde == nullptr)
 	{
 		LOG("Failed to allocate memory for intro enemy");
 		return AppStatus::ERROR;
-	}
+	}*/
 
 	if(PacMan->Initialise() != AppStatus::OK)
 	{
@@ -104,11 +104,11 @@ AppStatus Intro::Init()
 		LOG("Failed to initialise intro enemy");
 		return AppStatus::ERROR;
 	}
-	if (Clyde->Initialise() != AppStatus::OK)
+	/*if (Clyde->Initialise() != AppStatus::OK)
 	{
 		LOG("Failed to initialise intro enemy");
 		return AppStatus::ERROR;
-	}
+	}*/
 	if (Pinky->Initialise() != AppStatus::OK)
 	{
 		LOG("Failed to initialise intro enemy");
@@ -237,8 +237,8 @@ void Intro::Update()
 		isPinky = false;
 		Inky->introCaught = false;
 		isInky = false;
-		Clyde->introCaught = false;
-		isClyde = false;
+		/*Clyde->introCaught = false;
+		isClyde = false;*/
 
 		end = false;
 		timer = 0;
@@ -264,10 +264,10 @@ void Intro::Update()
 			Inky->SetPos({ playerX, playerY });
 			isInky = true;
 		}
-		if (timer == 40) {
+		/*if (timer == 40) {
 			Clyde->SetPos({ playerX, playerY });
 			isClyde = true;
-		}
+		}*/
 
 		end = PacMan->IntroUpdate(turn);
 		if (end) loop = true;
@@ -275,7 +275,7 @@ void Intro::Update()
 		if (isBlinky) Blinky->IntroUpdate(turn);
 		if (isInky) Inky->IntroUpdate(turn);
 		if (isPinky) Pinky->IntroUpdate(turn);
-		if (isClyde) Clyde->IntroUpdate(turn);
+		/*if (isClyde) Clyde->IntroUpdate(turn);*/
 
 		CheckCollisions();
 		timer++;
@@ -290,7 +290,7 @@ void Intro::Render()
 	Blinky->DrawPlayer();
 	Inky->DrawPlayer();
 	Pinky->DrawPlayer();
-	Clyde->DrawPlayer();
+	/*Clyde->DrawPlayer();*/
 	if(isDot)Dot->Draw();
 	EndMode2D();
 }
@@ -310,10 +310,10 @@ void Intro::CheckCollisions()
 		}
 	}
 
-	if (isClyde) {
+	/*if (isClyde) {
 		enemy_box = Clyde->GetHitbox();
 		if (player_box.TestAABB(enemy_box)) Clyde->introCaught = true;
-	}
+	}*/
 
 	if (isInky) {
 		enemy_box = Inky->GetHitbox();
@@ -337,6 +337,6 @@ void Intro::Release()
 	Inky->Release();
 	Blinky->Release();
 	Pinky->Release();
-	Clyde->Release();
+	/*Clyde->Release();*/
 	introScene->Release();
 }

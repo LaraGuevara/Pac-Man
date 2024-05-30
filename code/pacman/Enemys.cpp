@@ -33,9 +33,9 @@ AppStatus Enemy::Initialise()
 	case EnemyType::INKY:
 		k = 0;
 		break;
-	case EnemyType::CLYDE:
+	/*case EnemyType::CLYDE:
 		k = n * 3;
-		break;
+		break;*/
 	}
 
 	ResourceManager& data = ResourceManager::Instance();
@@ -718,9 +718,9 @@ void Enemy::UpdateTarget(Point pacmanDir, Point pacmanPos, Point blinkypos)
 			case EnemyType::INKY:
 				target = { TILE_SIZE * (LEVEL_WIDTH - 1), TILE_SIZE * (LEVEL_HEIGHT - 1) };
 				break;
-			case EnemyType::CLYDE:
+			/*case EnemyType::CLYDE:
 				target = { 0, TILE_SIZE * (LEVEL_HEIGHT - 1) };
-				break;
+				break;*/
 			}
 		}
 		else {
@@ -736,13 +736,13 @@ void Enemy::UpdateTarget(Point pacmanDir, Point pacmanPos, Point blinkypos)
 				target.x += target.x - blinkypos.x;
 				target.y += target.y - blinkypos.y;
 				break;
-			case EnemyType::CLYDE:
+			/*case EnemyType::CLYDE:
 				if (pacmanPos.x <= (pos.x + TILE_SIZE * 6) and pacmanPos.x >= (pos.x - TILE_SIZE * 6)) {
 					if (pacmanPos.y <= (pos.y + TILE_SIZE * 6) and pacmanPos.y >= (pos.y - TILE_SIZE * 6)) target = { 0, TILE_SIZE * (LEVEL_HEIGHT - 1) };
 					else target = pacmanPos;
 				}
 				else target = pacmanPos;
-				break;
+				break;*/
 			}
 		}
 	}

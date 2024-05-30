@@ -13,7 +13,7 @@ Game::Game()
     img_menu_blinky = nullptr;
     img_menu_pinky = nullptr;
     img_menu_inky = nullptr;
-    img_menu_clyde = nullptr;
+    /*img_menu_clyde = nullptr;*/
     menu1 = nullptr;
 
     target = {};
@@ -92,11 +92,11 @@ AppStatus Game::LoadResources()
     }
     img_menu_empty = data.GetTexture(Resource::IMG_MENU_EMPTY);
 
-    if (data.LoadTexture(Resource::IMG_MENU_CLYDE, "Resources/Menus/homescreenclyde.png") != AppStatus::OK)
+    /*if (data.LoadTexture(Resource::IMG_MENU_CLYDE, "Resources/Menus/homescreenclyde.png") != AppStatus::OK)
     {
         return AppStatus::ERROR;
     }
-    img_menu_clyde = data.GetTexture(Resource::IMG_MENU_CLYDE);
+    img_menu_clyde = data.GetTexture(Resource::IMG_MENU_CLYDE);*/
 
     if (data.LoadTexture(Resource::IMG_MENU_BLINKY, "Resources/Menus/homescreenblinky.png") != AppStatus::OK)
     {
@@ -262,11 +262,11 @@ void Game::Render()
             if (counter <= 480) DrawRectangle(7 * TILE_SIZE, 13 * TILE_SIZE, 20 * TILE_SIZE, 2 * TILE_SIZE, BLACK);
             else if (counter <= 540) DrawRectangle(18 * TILE_SIZE, 13 * TILE_SIZE, 10 * TILE_SIZE, 2 * TILE_SIZE, BLACK);
         }
-        else if (counter <= 780) {
+        /*else if (counter <= 780) {
             DrawTexture(*img_menu_clyde, 0, 0, WHITE);
             if (counter <= 660) DrawRectangle(7 * TILE_SIZE, 15 * TILE_SIZE, 20 * TILE_SIZE, 2 * TILE_SIZE, BLACK);
             else if (counter <= 720) DrawRectangle(18 * TILE_SIZE, 15 * TILE_SIZE, 10 * TILE_SIZE, 2 * TILE_SIZE, BLACK);
-        }
+        }*/
         else {
             DrawTexture(*img_menu, 0, 0, WHITE);
             if (counter == 840) intro->loopCheck = false;
@@ -300,7 +300,7 @@ void Game::UnloadResources()
     data.ReleaseTexture(Resource::IMG_MENU_BLINKY);
     data.ReleaseTexture(Resource::IMG_MENU_PINKY);
     data.ReleaseTexture(Resource::IMG_MENU_INKY);
-    data.ReleaseTexture(Resource::IMG_MENU_CLYDE);
+    /*data.ReleaseTexture(Resource::IMG_MENU_CLYDE);*/
     data.ReleaseTexture(Resource::IMG_MENU_EMPTY);
     data.ReleaseTexture(Resource::IMG_MENU1);
 

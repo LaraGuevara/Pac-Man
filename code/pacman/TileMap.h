@@ -49,7 +49,7 @@ enum class Tile {
 	PLAYER = 100,
 
 	//enemies
-	BLINKY = 101, PINKY, INKY, CLYDE,
+	BLINKY = 101, PINKY, INKY, /*CLYDE,*/
 
 	FRUIT_ICON = 200, FRUIT_ICON_1, FRUIT_ICON_2
 	
