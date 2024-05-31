@@ -1,4 +1,4 @@
-# GITHUB
+## GITHUB
 ---
 [Project](https://github.com/LaraGuevara/Pac-Man)
 
@@ -31,6 +31,10 @@ Pac-Man is a maze game developed for arcades by Namco and released in Japan on M
 * F2 -> Insta-win
 * F3 -> Insta-lose
 * F4 -> God mode
+* F5 -> Spawn in addition fruit items
+* Skip to levels:
+  * 1 -> Level 1
+  * 2 -> Level 2
 
 ## FEATURES
 ---
