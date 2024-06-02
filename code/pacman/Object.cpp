@@ -72,11 +72,3 @@ int Object::Sounds()
 		return 0;
 	}
 }
-
-void Object::Release() 
-{
-	ResourceManager& data = ResourceManager::Instance();
-	data.ReleaseTexture(Resource::IMG_TILES);
-
-	render->Release();
-}
