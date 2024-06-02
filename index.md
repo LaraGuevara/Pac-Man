@@ -1,5 +1,7 @@
 ## Our project 
 
+![image1](https://www.google.com/url?sa=i&url=https%3A%2F%2Fpacman.fandom.com%2Fwiki%2FPac-Man&psig=AOvVaw0eM8jR7SK1QrfOx0x1Le_l&ust=1717439007011000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCMDbroHFvYYDFQAAAAAdAAAAABAE)
+
 This is a tribute to Pac-Man, the classic game from 1980. This project is done by students from CITM.
 
 ## About the game
@@ -8,7 +10,8 @@ Pac-Man is a maze game developed for arcades by Namco and released in Japan on M
 
 ## Gameplay
 
-<iframe width="740" height="590" src="https://www.youtube.com/watch?v=tNBN89cQTlE" frameborder="0" allowfullscreen></iframe>
+<iframe width="740" height="590" src="https://youtu.be/FaA0oJ9ejNk" frameborder="0" allowfullscreen></iframe>
+[Old video](https://www.youtube.com/watch?v=tNBN89cQTlE)
 
 ## Controls
 ~~~~~~~~~~~~~~~
@@ -23,6 +26,16 @@ General controls:
 - START: SPACE key
 - EXIT GAME: ESC key
 
+Debug functions:
+F1 -> Display colliders
+F2 -> Insta-win
+F3 -> Insta-lose
+F4 -> God mode
+F5 -> Spawn in additional fruit items
+
+Skip to levels:
+1 -> Level 1
+2 -> Level 2
 
 
 ~~~~~~~~~~~~~~~
@@ -48,7 +61,7 @@ _Maria Besora's responsability and Github account_
 
 
 ### For more information see our wiki page [HERE](https://github.com/LaraGuevara/Pac-Man/wiki)
-### Download the last version of the game [HERE](https://github.com/LaraGuevara/Pac-Man/releases/download/Release/PixelPioneers_PacMan_v0.5.zip)
+### Download the last version of the game [HERE](https://github.com/LaraGuevara/Pac-Man/releases/download/Alpha/PixelPioneers_PacMan_v1.0.zip)
 ### Check our Github repository [HERE](https://github.com/LaraGuevara/Pac-Man)
 
 
