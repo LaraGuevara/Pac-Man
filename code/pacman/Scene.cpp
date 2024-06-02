@@ -312,6 +312,11 @@ AppStatus Scene::LoadLevel(int stage)
 		inky->SetTargetExit();
 		pinky->SetTargetExit();
 		clyde->SetTargetExit();
+
+		blinky->SetNormal();
+		inky->SetNormal();
+		pinky->SetNormal();
+		clyde->SetNormal();
 		if (IsSoundPlaying(sound_pellet)) StopSound(sound_pellet);
 	}
 	else

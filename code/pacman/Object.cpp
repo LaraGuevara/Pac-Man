@@ -21,7 +21,6 @@ Object::Object(const Point& p, ObjectType t) : Entity(p, OBJECT_PHYSICAL_SIZE, O
 }
 Object::Object(const Point& p, int fruit) : Entity(p, OBJECT_PHYSICAL_SIZE, OBJECT_PHYSICAL_SIZE, OBJECT_FRAME_SIZE * 2, OBJECT_FRAME_SIZE * 2)
 {
-
 	Rectangle rc;
 	const int n = 16;
 	const int c = 8 + 1;
@@ -72,4 +71,12 @@ int Object::Sounds()
 		LOG("Internal error: object type invalid when giving points");
 		return 0;
 	}
+}
+
+void Object::Release() 
+{
+	ResourceManager& data = ResourceManager::Instance();
+	data.ReleaseTexture(Resource::IMG_TILES);
+
+	render->Release();
 }

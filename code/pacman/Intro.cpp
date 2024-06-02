@@ -9,7 +9,6 @@ Intro::Intro()
 	Pinky = nullptr;
 	Inky = nullptr;
 	Clyde = nullptr;
-	Dot = nullptr;
 	introScene = nullptr;
 
 	camera.target = { 0, 0 };				
@@ -45,10 +44,11 @@ Intro::~Intro()
 		delete Clyde;
 		Clyde = nullptr;
 	}
-	if (Dot != nullptr) {
-		delete Dot;
-		Dot = nullptr;
+	for (Entity* obj : pellet)
+	{
+		delete obj;
 	}
+	pellet.clear();
 	if (introScene != nullptr) {
 		introScene->Release();
 		delete introScene;
@@ -143,6 +143,7 @@ AppStatus Intro::LoadIntro()
 	int x, y, i;
 	Tile tile;
 	Point pos;
+	Object* obj;
 	int* map = nullptr;
 	size = LEVEL_WIDTH * LEVEL_HEIGHT;
 
@@ -210,7 +211,8 @@ AppStatus Intro::LoadIntro()
 				dotX = pos.x;
 				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
 				dotY = pos.y;
-				Dot = new Object(pos, ObjectType::PELLET);
+				obj = new Object(pos, ObjectType::PELLET);
+				pellet.push_back(obj);
 				map[i] = 0;
 			}
 			++i;
@@ -228,7 +230,8 @@ void Intro::Update()
 	if (end) {
 		turn = false;
 		PacMan->SetPos({ playerX, playerY });
-		Dot = new Object({dotX, dotY}, ObjectType::PELLET);
+		Object* obj = new Object({ dotX, dotY }, ObjectType::PELLET);
+		pellet.push_back(obj);
 		isDot = true;
 
 		Blinky->introCaught = false;
@@ -291,7 +294,10 @@ void Intro::Render()
 	Inky->DrawPlayer();
 	Pinky->DrawPlayer();
 	Clyde->DrawPlayer();
-	if(isDot)Dot->Draw();
+	for (Object* obj : pellet)
+	{
+		obj->Draw();
+	}
 	EndMode2D();
 }
 
@@ -302,11 +308,18 @@ void Intro::CheckCollisions()
 	player_box = PacMan->GetHitbox();
 
 	if (isDot) {
-		obj_box = Dot->GetHitbox();
-		if (player_box.TestAABB(obj_box)) {
-			delete Dot;
-			turn = true;
-			isDot = false;
+		auto it = pellet.begin();
+		while (it != pellet.end()) {
+			obj_box = (*it)->GetHitbox();
+			if (player_box.TestAABB(obj_box)) {
+				delete* it;
+				it = pellet.erase(it);
+				turn = true;
+				isDot = false;
+			}
+			else {
+				++it;
+			}
 		}
 	}
 
@@ -339,4 +352,9 @@ void Intro::Release()
 	Pinky->Release();
 	Clyde->Release();
 	introScene->Release();
+	for (Entity* obj : pellet)
+	{
+		delete obj;
+	}
+	pellet.clear();
 }

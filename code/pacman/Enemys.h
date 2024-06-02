@@ -41,6 +41,7 @@ public:
 	void SetTargetExit();
 	void SetHome(Point t);
 	void SetHomeExit(Point t);
+	void SetNormal();
 	bool IsDead();
 	bool caught = false;
 	bool useDoor = false;

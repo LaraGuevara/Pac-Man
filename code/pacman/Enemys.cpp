@@ -154,6 +154,12 @@ Point Enemy::GetEnemyPos()
 	return pos;
 }
 
+void Enemy::SetNormal()
+{
+	state = State_e::IDLE;
+	SetAnimation((int)EnemyAnim::IDLE);
+}
+
 void Enemy::SetTarget(Point t) 
 {
 	target = t;
