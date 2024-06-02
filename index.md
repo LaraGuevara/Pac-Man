@@ -1,6 +1,5 @@
 ## Our project 
 
-![image1](https://www.google.com/url?sa=i&url=https%3A%2F%2Fpacman.fandom.com%2Fwiki%2FPac-Man&psig=AOvVaw0eM8jR7SK1QrfOx0x1Le_l&ust=1717439007011000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCMDbroHFvYYDFQAAAAAdAAAAABAE)
 
 This is a tribute to Pac-Man, the classic game from 1980. This project is done by students from CITM.
 
