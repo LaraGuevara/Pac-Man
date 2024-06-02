@@ -1,6 +1,7 @@
 ## GITHUB
 ---
 [Project](https://github.com/LaraGuevara/Pac-Man)
+[Github web](https://laraguevara.github.io/Pac-Man/)
 
 ## YOUTUBE
 ---
