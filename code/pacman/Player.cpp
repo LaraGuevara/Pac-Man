@@ -349,7 +349,7 @@ void Player::Move()
 			if (state == State::WALKING) Stop();
 		}
 		if (pos.x == 0) {
-			pos.x = WINDOW_WIDTH;
+			pos.x = WINDOW_WIDTH - 8;
 			ChangeAnimRight();
 		}
 		

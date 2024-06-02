@@ -107,7 +107,7 @@ AppStatus Scene::Init()
 		return AppStatus::ERROR;
 	}
 	//cREATE ENEMY (BLUE)
-	inky = new Enemy({0,0}, State_e::IDLE, Look_e::RIGHT, EnemyType::INKY);
+	inky = new Enemy({0,0}, State_e::IDLE, Look_e::UP, EnemyType::INKY);
 	if (inky == nullptr)
 	{
 		LOG("Failed to allocate memory for enemy");
@@ -120,13 +120,13 @@ AppStatus Scene::Init()
 		LOG("Failed to allocate memory for enemy");
 		return AppStatus::ERROR;
 	}
-	pinky = new Enemy({ 0,0 }, State_e::IDLE, Look_e::LEFT, EnemyType::PINKY);
+	pinky = new Enemy({ 0,0 }, State_e::IDLE, Look_e::UP, EnemyType::PINKY);
 	if (pinky == nullptr)
 	{
 		LOG("Failed to allocate memory for enemy");
 		return AppStatus::ERROR;
 	}
-	clyde = new Enemy({ 0,0 }, State_e::IDLE, Look_e::LEFT, EnemyType::CLYDE);
+	clyde = new Enemy({ 0,0 }, State_e::IDLE, Look_e::UP, EnemyType::CLYDE);
 	if (clyde == nullptr)
 	{
 		LOG("Failed to allocate memory for enemy");
@@ -282,7 +282,7 @@ AppStatus Scene::LoadLevel(int stage)
 			 0,  0,  0,  0,  0,  4, 50, 25, 26,  0,  0,  0,  0,  101,  0,  0,  0,  0,  0, 25, 26, 50,  3,  0,  0,  0,  0, 0,
 			 0,  0,  0,  0,  0,  4, 50, 25, 26,  0, 30, 13, 34, 70, 71, 33, 13, 29,  0, 25, 26, 50,  3,  0,  0,  0,  0, 0,
 			11, 11, 11, 11, 11, 27, 50, 37, 38,  0,  3,  0,  0,  0,  0,  0,  0,  4,  0, 37, 38, 50, 28, 11, 11, 11, 11, 11,
-			-3,  0,  0,  0,  0,  0, 50,  0,  0,  0,  3,  103,  0, 102,  0,  0,  104,  4,  0,  0,  0, 50,  0,  0,  0,  0,  0, -2,
+			-3,  0,  0,  0,  0,  0, 50,  0,  0,  0,  3,  103,  0, 102,  0,  104,  0,  4,  0,  0,  0, 50,  0,  0,  0,  0,  0, -2,
 			13, 13, 13, 13, 13, 23, 50, 35, 36,  0,  3,  0,  0,  0,  0,  0,  0,  4,  0, 35, 36, 50, 24, 13, 13, 13, 13, 13,
 			 0,  0,  0,  0,  0,  4, 50, 25, 26,  0, 32, 11, 11, 11, 11, 11, 11, 31,  0, 25, 26, 50,  3,  0,  0,  0,  0, 0,
 			 0,  0,  0,  0,  0,  4, 50, 25, 26,  0,  0,  0,  0, 53,  0,  0,  0,  0,  0, 25, 26, 50,  3,  0,  0,  0,  0, 0,
@@ -310,6 +310,8 @@ AppStatus Scene::LoadLevel(int stage)
 		collectPellet = false;
 		pellet_timer = PELLETTIME;
 		inky->SetTargetExit();
+		pinky->SetTargetExit();
+		clyde->SetTargetExit();
 		if (IsSoundPlaying(sound_pellet)) StopSound(sound_pellet);
 	}
 	else
@@ -350,11 +352,12 @@ AppStatus Scene::LoadLevel(int stage)
 			}
 			else if (tile == Tile::BLINKY)
 			{
-				pos.x = x * TILE_SIZE;
+				pos.x = x * TILE_SIZE + TILE_SIZE / 2;
 				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
 				blinkyX = pos.x;
 				blinkyY = pos.y;
 				blinky->SetPos(pos);
+
 				blinky->SetHome(pos);
 				pinky->SetHome(pos);
 				clyde->SetHome(pos);
@@ -372,9 +375,9 @@ AppStatus Scene::LoadLevel(int stage)
 			}
 			else if (tile == Tile::CLYDE)
 			{
-				pos.x = x * TILE_SIZE;
-				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
+				pos.x = x * TILE_SIZE + TILE_SIZE / 2;
 				clydeX = pos.x;
+				pos.y = y * TILE_SIZE + TILE_SIZE - 1;
 				clydeY = pos.y;
 				clyde->SetPos(pos);
 				map[i] = 0;
@@ -702,57 +705,56 @@ void Scene::CheckCollisions()
 	else if (count <= FRACTION5_ITEMS * 3) siren = 2;
 	else if (count <= FRACTION5_ITEMS * 4) siren = 1;
 
-	if (!god_mode) {
-		enemy_box = inky->GetHitbox();
-		if (player_box.TestAABB(enemy_box)) {
-			if (!inky->IsDead() and !collectPellet) lose = true;
-			else {
-				if (!inkyCaught) {
-					player->IncrScore(ghost_points);
-					ghost_points *= 2;
-				}
+
+	enemy_box = inky->GetHitbox();
+	if (player_box.TestAABB(enemy_box)) {
+		if (!inky->IsDead() and !collectPellet and !god_mode) lose = true;
+		else {
+			if (!inkyCaught and collectPellet) {
+				player->IncrScore(ghost_points);
+				ghost_points *= 2;
 				inky->caught = true;
 				inkyCaught = true;
 				PlaySound(sound_eatghost);
 			}
 		}
-		else {
-			enemy_box = blinky->GetHitbox();
-			if (player_box.TestAABB(enemy_box)) {
-				if (!blinky->IsDead() and !collectPellet) lose = true;
-				else {
-					if (!blinkyCaught) {
-						player->IncrScore(ghost_points);
-						ghost_points *= 2;
-					}
+	}
+	else {
+		enemy_box = blinky->GetHitbox();
+		if (player_box.TestAABB(enemy_box)) {
+			if (!blinky->IsDead() and !collectPellet and !god_mode) lose = true;
+			else {
+				if (!blinkyCaught and collectPellet) {
+					player->IncrScore(ghost_points);
+					ghost_points *= 2;
 					blinky->caught = true;
 					blinkyCaught = true;
 					PlaySound(sound_eatghost);
 				}
 			}
-			else {
-				enemy_box = pinky->GetHitbox();
-				if (player_box.TestAABB(enemy_box)) {
-					if (!pinky->IsDead() and !collectPellet) lose = true;
-					else {
-						if (!pinkyCaught) {
-							player->IncrScore(ghost_points);
-							ghost_points *= 2;
-						}
+		}
+		else {
+			enemy_box = pinky->GetHitbox();
+			if (player_box.TestAABB(enemy_box)) {
+				if (!pinky->IsDead() and !collectPellet and !god_mode) lose = true;
+				else {
+					if (!pinkyCaught and collectPellet) {
+						player->IncrScore(ghost_points);
+						ghost_points *= 2;
 						pinky->caught = true;
 						pinkyCaught = true;
 						PlaySound(sound_eatghost);
 					}
 				}
-				else {
-					enemy_box = clyde->GetHitbox();
-					if (player_box.TestAABB(enemy_box)) {
-						if (!clyde->IsDead() and !collectPellet) lose = true;
-						else {
-							if (!clydeCaught) {
-								player->IncrScore(ghost_points);
-								ghost_points *= 2;
-							}
+			}
+			else {
+				enemy_box = clyde->GetHitbox();
+				if (player_box.TestAABB(enemy_box)) {
+					if (!clyde->IsDead() and !collectPellet and !god_mode) lose = true;
+					else {
+						if (!clydeCaught and collectPellet) {
+							player->IncrScore(ghost_points);
+							ghost_points *= 2;
 							clyde->caught = true;
 							clydeCaught = true;
 							PlaySound(sound_eatghost);

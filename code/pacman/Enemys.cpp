@@ -13,7 +13,8 @@ Enemy::Enemy(const Point& p, State_e s, Look_e view, EnemyType t) :
 	map = nullptr;
 	type = t;
 	if (type != EnemyType::BLINKY) useDoor = true;
-	mode = Mode_e::CHASE;
+	if (type != EnemyType::CLYDE) mode = Mode_e::CHASE;
+	else mode = Mode_e::SCATTER;
 	
 }
 Enemy::~Enemy()
@@ -433,8 +434,8 @@ void Enemy::Move(Point pacmanDir, Point pacmanPos, Point blinkypos)
 	
 	UpdateTarget(pacmanDir, pacmanPos, blinkypos);
 
-	if (pacmanPos.x <= (pos.x + TILE_SIZE * 12) and pacmanPos.x >= (pos.x - TILE_SIZE * 12)) {
-		if (pacmanPos.y <= (pos.y + TILE_SIZE * 12) and pacmanPos.y >= (pos.y - TILE_SIZE * 12)) mode = Mode_e::CHASE;
+	if (pacmanPos.x <= (pos.x + TILE_SIZE * 10) and pacmanPos.x >= (pos.x - TILE_SIZE * 10)) {
+		if (pacmanPos.y <= (pos.y + TILE_SIZE * 10) and pacmanPos.y >= (pos.y - TILE_SIZE * 10)) mode = Mode_e::CHASE;
 		else mode = Mode_e::SCATTER;
 	}
 	else mode = Mode_e::SCATTER;
@@ -699,8 +700,8 @@ void Enemy::Move(Point pacmanDir, Point pacmanPos, Point blinkypos)
 void Enemy::UpdateTarget(Point pacmanDir, Point pacmanPos, Point blinkypos) 
 {
 	if (useDoor) {
-		if (pos.x == target.x and pos.y == target.y) useDoor = false;
-		else if (home.x == target.x and home.y == target.y) {
+		if (pos.x == target.x and pos.y == target.y-1) useDoor = false;
+		else if (home.x == target.x and home.y == target.y-1) {
 			state = State_e::IDLE;
 			caught = false;
 			target = home_exit;
@@ -737,8 +738,8 @@ void Enemy::UpdateTarget(Point pacmanDir, Point pacmanPos, Point blinkypos)
 				target.y += target.y - blinkypos.y;
 				break;
 			case EnemyType::CLYDE:
-				if (pacmanPos.x <= (pos.x + TILE_SIZE * 6) and pacmanPos.x >= (pos.x - TILE_SIZE * 6)) {
-					if (pacmanPos.y <= (pos.y + TILE_SIZE * 6) and pacmanPos.y >= (pos.y - TILE_SIZE * 6)) target = { 0, TILE_SIZE * (LEVEL_HEIGHT - 1) };
+				if (pacmanPos.x <= (pos.x + TILE_SIZE * 4) and pacmanPos.x >= (pos.x - TILE_SIZE * 4)) {
+					if (pacmanPos.y <= (pos.y + TILE_SIZE * 4) and pacmanPos.y >= (pos.y - TILE_SIZE * 4)) target = { 0, TILE_SIZE * (LEVEL_HEIGHT - 1) };
 					else target = pacmanPos;
 				}
 				else target = pacmanPos;
